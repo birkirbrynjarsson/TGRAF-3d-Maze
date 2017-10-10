@@ -86,4 +86,17 @@ public class ModelMatrix extends Matrix {
 
 		this.addTransformation(MMtmp);
 	}
+
+	public void addRotationY(float angle)
+	{
+		float c = (float)Math.cos((double)angle * Math.PI / 180.0);
+		float s = (float)Math.sin((double)angle * Math.PI / 180.0);
+
+		MMtmp[0] = c; MMtmp[4] = 0; MMtmp[8] = -s; MMtmp[12] = 0;
+		MMtmp[1] = 0; MMtmp[5] = 1; MMtmp[9] = 0; MMtmp[13] = 0;
+		MMtmp[2] = s; MMtmp[6] = 0; MMtmp[10] = c; MMtmp[14] = 0;
+		MMtmp[3] = 0; MMtmp[7] = 0; MMtmp[11] = 0; MMtmp[15] = 1;
+
+		this.addTransformation(MMtmp);
+	}
 }
