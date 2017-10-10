@@ -117,25 +117,6 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		playerDirection = 0f;
 	}
 
-	private void input()
-	{
-		if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.D)) {
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.W)) {
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.S)) {
-		}
-	}
 
 	private void update()
 	{
@@ -192,6 +173,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 		for(int viewNum = 0; viewNum < 2; viewNum++)
 		{
+			// --- The player view ---
 			if(viewNum == 0)
 			{
 				if(firstPerson) {
@@ -203,6 +185,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 				}
 			}
+			// -- The minimap view --
 			else
 			{
 				int miniMapHeight = Gdx.graphics.getHeight() / 3;
@@ -225,10 +208,10 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 			ModelMatrix.main.setShaderMatrix();
 			BoxGraphic.drawSolidCube();
 
-			Gdx.gl.glUniform4f(colorLoc, 0.9f, 0f, 0.1f, 0.5f);
+			Gdx.gl.glUniform4f(colorLoc, 0.2f, 0.8f, 0.2f, 0.5f);
 			ModelMatrix.main.loadIdentityMatrix();
 			ModelMatrix.main.addScale(10f, 0.8f, 10f);
-			ModelMatrix.main.addTranslationBaseCoords(5,0.4f,5);
+			ModelMatrix.main.addTranslationBaseCoords(1,0.4f,1);
 			ModelMatrix.main.setShaderMatrix();
 			BoxGraphic.drawSolidCube();
 			ModelMatrix.main.popMatrix();
@@ -257,6 +240,12 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		update();
 		display();
 
+	}
+
+
+	void collisionDetection() {
+		//for all walls in the maze
+		//if(cam.collide(wall))..
 	}
 
 
