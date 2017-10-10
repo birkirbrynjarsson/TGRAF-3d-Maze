@@ -48,8 +48,8 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		String vertexShaderString;
 		String fragmentShaderString;
 
-		vertexShaderString = Gdx.files.internal("shaders\\simple3D.vert").readString();
-		fragmentShaderString =  Gdx.files.internal("shaders\\simple3D.frag").readString();
+		vertexShaderString = Gdx.files.internal("shaders/simple3D.vert").readString();
+		fragmentShaderString =  Gdx.files.internal("shaders/simple3D.frag").readString();
 
 		vertexShaderID = Gdx.gl.glCreateShader(GL20.GL_VERTEX_SHADER);
 		fragmentShaderID = Gdx.gl.glCreateShader(GL20.GL_FRAGMENT_SHADER);
