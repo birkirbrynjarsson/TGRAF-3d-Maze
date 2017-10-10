@@ -103,7 +103,7 @@ public class Camera {
         this.top = top;
         this.near = near;
         this.far = far;
-        orthographic = true;
+        this.orthographic = true;
     }
 
     public void perspectiveProjection(float fov, float ratio, float near, float far) {
@@ -114,7 +114,7 @@ public class Camera {
         this.near = near;
         this.far = far;
 
-        orthographic = false;
+        this.orthographic = false;
     }
 
     public void setShaderMatrices()
