@@ -41,6 +41,8 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 	private int colorLoc;
 	private float fov = 50.0f;
 
+	private float bouncingBallY = 0;
+
 	private ModelMatrix modelMatrix;
 
 	@Override
