@@ -42,6 +42,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 	private float fov = 50.0f;
 
 	private ModelMatrix modelMatrix;
+	private Maze maze;
 
 	@Override
 	public void create () {
@@ -115,6 +116,9 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		firstPerson = true;
 		thirdPerson = false;
 		playerDirection = 0f;
+
+		// Birkir and his amazing maze
+		Maze maze = new Maze(12, 12, 6f, ModelMatrix.main, colorLoc, positionLoc, normalLoc);
 	}
 
 
@@ -198,6 +202,8 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 			// ----------------------------------
 			// 		 Draw our matrix here
 			// ----------------------------------
+
+			maze.display();
 
 			Gdx.gl.glUniform4f(colorLoc, 1f, 0f, 0f, 1f);
 
