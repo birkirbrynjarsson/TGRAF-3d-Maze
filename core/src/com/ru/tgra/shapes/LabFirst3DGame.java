@@ -110,7 +110,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		cam.perspectiveProjection(fov, 1.0f, 0.4f, 100.0f);
 		cam.look(new Point3D(-13f, 3f, 0f), new Point3D(0,3,0), new Vector3D(0,1,0));
 		orthoCam = new Camera(viewMatrixLoc, projectionMatrixLoc);
-		orthoCam.orthographicProjection(-10.0f,10.0f,-10.0f,10.0f,1.0f, 100.0f);
+		orthoCam.orthographicProjection(-30.0f,30.0f,-30.0f,30.0f,1.0f, 100.0f);
 
 		// ----------------------------------
 		// 		  Game play settings
@@ -120,7 +120,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		playerDirection = 0f;
 
 		// Birkir and his amazing maze
-		Maze maze = new Maze(12, 12, 6f, ModelMatrix.main, colorLoc, positionLoc, normalLoc);
+		maze = new Maze(12, 12, 6f, ModelMatrix.main, colorLoc, positionLoc, normalLoc);
 	}
 
 
@@ -237,6 +237,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 				ModelMatrix.main.addRotationY(playerDirection);
 				ModelMatrix.main.setShaderMatrix();
 				BoxGraphic.drawSolidCube();
+				ModelMatrix.main.popMatrix();
 			}
 		}
 	}

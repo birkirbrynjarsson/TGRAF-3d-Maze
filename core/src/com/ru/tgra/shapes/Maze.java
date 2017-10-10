@@ -15,6 +15,8 @@ public class Maze
     private ModelMatrix mm;
     private int colorLoc;
     private float height;
+    private int positionLoc;
+    private int normalLoc;
 
     public Maze(int x, int y, float cellSize, ModelMatrix mm, int colorLoc, int positionLoc, int normalLoc) {
         this.x = x;
@@ -26,6 +28,8 @@ public class Maze
         this.width = cellSize/5;
         this.height = 5f;
         generateMaze(0, 0);
+        this.positionLoc = positionLoc;
+        this.normalLoc = normalLoc;
     }
 
     public void display() {
@@ -33,27 +37,55 @@ public class Maze
         for (i = 0; i < y; i++) {
             // draw the north edge
             for (j = 0; j < x; j++) {
-                System.out.print((maze[j][i] & 1) == 0 ? "+---" : "+   ");
-                displayHorWall(i, j);
-                displayPillar(i, j);
+                //System.out.print((maze[j][i] & 1) == 0 ? "+---" : "+   ");
+                if((maze[j][i] & 1) == 0 ) {
+                    displayHorWall(i, j);
+                }
+                else {
+                    displayPillar(i, j);
+                }
             }
-            System.out.println("+");
+            //System.out.println("+");
             displayPillar(i, j);
             // draw the west edge
             for (j = 0; j < x; j++) {
-                System.out.print((maze[j][i] & 8) == 0 ? "|   " : "    ");
-                displayVerWall(i, j);
+                //System.out.print((maze[j][i] & 8) == 0 ? "|   " : "    ");
+                if((maze[j][i] & 8) == 0){
+                    displayVerWall(i, j);
+                }
                 // Nothing
             }
             displayVerWall(i, j);
-            System.out.println("|");
+            //System.out.println("|");
         }
         // draw the bottom line
         for (j = 0; j < x; j++) {
             displayHorWall(i, j);
-            System.out.print("+---");
+            //System.out.print("+---");
         }
         displayPillar(i, j);
+        //System.out.println("+");
+    }
+
+    public void display2D() {
+        int i, j;
+        for (i = 0; i < y; i++) {
+            // draw the north edge
+            for (j = 0; j < x; j++) {
+                System.out.print((maze[j][i] & 1) == 0 ? "+---" : "+   ");
+            }
+            System.out.println("+");
+            // draw the west edge
+            for (j = 0; j < x; j++) {
+                System.out.print((maze[j][i] & 8) == 0 ? "|   " : "    ");
+                // Nothing
+            }
+            System.out.println("|");
+        }
+        // draw the bottom line
+        for (j = 0; j < x; j++) {
+            System.out.print("+---");
+        }
         System.out.println("+");
     }
 
@@ -102,20 +134,24 @@ public class Maze
         Gdx.gl.glUniform4f(colorLoc, 0.6f,0.0f,0.6f, 1.0f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
-        mm.addScale(width, height, cellSize);
-        mm.addTranslationBaseCoords((float)i*cellSize, 0, (float)j*cellSize);
+        mm.addScale(cellSize, height, width);
+        mm.addTranslationBaseCoords((float)i*cellSize+(cellSize/2), 0, (float)j*cellSize);
         mm.setShaderMatrix();
         BoxGraphic.drawSolidCube();
+        mm.popMatrix();
     }
 
     private void displayHorWall(int i, int j){
+
+
         Gdx.gl.glUniform4f(colorLoc, 0.6f,0.0f,0.6f, 1.0f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
-        mm.addScale(cellSize, height, width);
-        mm.addTranslationBaseCoords((float)i*cellSize, 0, (float)j*cellSize);
+        mm.addScale(width, height, cellSize);
+        mm.addTranslationBaseCoords((float)i*cellSize, 0, (float)j*cellSize+(cellSize/2));
         mm.setShaderMatrix();
         BoxGraphic.drawSolidCube();
+        mm.popMatrix();
     }
 
     private void displayPillar(int i, int j){
@@ -126,5 +162,6 @@ public class Maze
         mm.addTranslationBaseCoords((float)i*cellSize, 0, (float)j*cellSize);
         mm.setShaderMatrix();
         BoxGraphic.drawSolidCube();
+        mm.popMatrix();
     }
 }
