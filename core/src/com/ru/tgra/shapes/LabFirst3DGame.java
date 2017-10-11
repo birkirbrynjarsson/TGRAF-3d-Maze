@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.GL20;
 
 import java.awt.*;
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
+import java.util.Random;
 
 import com.badlogic.gdx.utils.BufferUtils;
 
@@ -27,23 +29,26 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 	private int viewMatrixLoc;
 	private int projectionMatrixLoc;
 
-	// Player viewing options
+	// Player variables
 	private boolean firstPerson;
 	private boolean thirdPerson;
-
 	private float playerDirection;
+	private int score;
 
-	// Our cameras
+	// Camera variables
 	private Camera cam;
 	private Camera orthoCam;
+	private Camera scoreCam;
 	float angle;
+
+	// Token variables
+	private ArrayList<Token> tokens;
+	private int TOKEN_NUMBER = 5;
+	private Random rand;
 
 	private int colorLoc;
 	private float fov = 90.0f;
 
-	private float bouncingBallY = 0;
-
-	private ModelMatrix modelMatrix;
 	private Maze maze;
 	private float movementSpeed = 3f; // used with deltatime, WASD keys
 	private float playerSize = 1f; // Radius of player circle, for collision and display in 2D
@@ -105,15 +110,28 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 
+
+
+
+		// Birkir and his amazing maze
+		int mazeSize = 12;
+		float cellSize = 6f;
+		maze = new Maze(mazeSize, mazeSize, cellSize, ModelMatrix.main, colorLoc, positionLoc, normalLoc);
+
 		// ----------------------------------
 		// 		Camera init & settings
 		// ----------------------------------
+		// --- Player camera ---
 		cam = new Camera(viewMatrixLoc, projectionMatrixLoc);
 		cam.perspectiveProjection(fov, 1.0f, 0.4f, 100.0f);
 //		cam.look(new Point3D(-13f, 3f, 0f), new Point3D(0,3,0), new Vector3D(0,1,0));
-		cam.look(new Point3D(3, 3f, 3f), new Point3D(1,3,0), new Vector3D(0,1,0));
+		cam.look(new Point3D((cellSize/2), 3f, (cellSize/2)), new Point3D(6,3,(cellSize/2)), new Vector3D(0,1,0));
+		// --- Mini map camera ---
 		orthoCam = new Camera(viewMatrixLoc, projectionMatrixLoc);
 		orthoCam.orthographicProjection(-30.0f,30.0f,-30.0f,30.0f,1.0f, 100.0f);
+		// --- Score camera ---
+		scoreCam = new Camera(viewMatrixLoc, projectionMatrixLoc);
+		scoreCam.orthographicProjection(-83.3f,83.3f,-25.0f,25.0f,1.0f, 100.0f);
 
 		// ----------------------------------
 		// 		  Game play settings
@@ -121,9 +139,22 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		firstPerson = true;
 		thirdPerson = false;
 		playerDirection = 0f;
+		score = 0;
 
-		// Birkir and his amazing maze
-		maze = new Maze(12, 12, 6f, ModelMatrix.main, colorLoc, positionLoc, normalLoc);
+		// ----------------------------------
+		// 		  Token settings
+		// ----------------------------------
+		rand = new Random();
+
+		tokens = new ArrayList<Token>();
+		// Initialize game tokens
+		for(int i = 0; i < TOKEN_NUMBER; i++) {
+			float x = ((rand.nextInt(mazeSize) * cellSize) + (cellSize/2));
+			float y = ((rand.nextInt(mazeSize) * cellSize) + (cellSize/2));
+
+			tokens.add(new Token(x, y, ModelMatrix.main, colorLoc));
+		}
+
 	}
 
 
@@ -140,12 +171,6 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
 			cam.yaw(90.f * deltaTime);
 			playerDirection += 90f * deltaTime;
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
-			//cam.pitch(-90.f * deltaTime);
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-			//cam.pitch(90.f * deltaTime);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
 //			cam.slide(-movementSpeed * deltaTime, 0, 0);
@@ -175,13 +200,21 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		if(Gdx.input.isKeyPressed(Input.Keys.F)) {
 			cam.slide(0, movementSpeed * deltaTime, 0);
 		}
-		if(Gdx.input.isKeyPressed(Input.Keys.Q)) {
-			//cam.roll(-90.f * deltaTime);
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.E)) {
-			//cam.roll(90.f * deltaTime);
-		}
+
 		maze.isWalls(cam.eye);
+
+		Token removedToken = null;
+
+		for(Token token : tokens) {
+			token.bounce(deltaTime);
+			if(cam.gotToken(token)) {
+				removedToken = token;
+				score++;
+			}
+		}
+
+		if(removedToken != null)
+			tokens.remove(removedToken);
 
 	}
 
@@ -197,7 +230,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 			{
 				if(firstPerson) {
 					Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-					cam.perspectiveProjection(fov, 1.0f, 0.1f, 100.0f);
+					cam.perspectiveProjection(fov, 1.4f, 0.1f, 100.0f);
 					cam.setShaderMatrices();
 				}
 				else if(thirdPerson) {
@@ -207,8 +240,8 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 			// -- The minimap view --
 			else
 			{
-				int miniMapHeight = Gdx.graphics.getHeight() / 3;
-				int miniMapWidth = Gdx.graphics.getWidth() / 3;
+				int miniMapHeight = 250;
+				int miniMapWidth = 250;
 				Gdx.gl.glViewport((Gdx.graphics.getWidth() - miniMapWidth), Gdx.graphics.getHeight() - miniMapHeight, miniMapWidth, miniMapHeight);
 				orthoCam.look(new Point3D(cam.eye.x, 10.0f, cam.eye.z), cam.eye, new Vector3D(0,0,-1));
 				orthoCam.setShaderMatrices();
@@ -221,7 +254,9 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 			maze.display(viewNum == 0);
 
-			Gdx.gl.glUniform4f(colorLoc, 1f, 0f, 0f, 1f);
+			for(Token token : tokens) {
+				token.display();
+			}
 
 //			ModelMatrix.main.loadIdentityMatrix();
 //			ModelMatrix.main.pushMatrix();
@@ -257,6 +292,29 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 				ModelMatrix.main.popMatrix();
 			}
 		}
+
+		int scoreHeight = 150;
+		int scoreWidth = 500;
+		int scoreSlotX = scoreWidth/TOKEN_NUMBER;
+		int scoreSlotY = scoreHeight/2;
+		Gdx.gl.glViewport(0, Gdx.graphics.getHeight() - scoreHeight, scoreWidth, scoreHeight);
+
+		scoreCam.look(new Point3D(-100,10,-100), new Point3D(-100,1,-100), new Vector3D(0,0,-1));
+		scoreCam.setShaderMatrices();
+
+		int x = -150;
+		int z = -110;
+		for(int i = 0; i < score; i++) {
+			Gdx.gl.glUniform4f(colorLoc, 1f, 1f, 0f, 1f);
+			ModelMatrix.main.loadIdentityMatrix();
+			ModelMatrix.main.pushMatrix();
+			ModelMatrix.main.addScale(5f, 0.4f, 5f);
+			ModelMatrix.main.addTranslationBaseCoords(x,1f,z);
+			ModelMatrix.main.setShaderMatrix();
+			SphereGraphic.drawSolidSphere();
+			ModelMatrix.main.popMatrix();
+			x += 20;
+		}
 	}
 
 	@Override
@@ -266,12 +324,6 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		update();
 		display();
 
-	}
-
-
-	void collisionDetection() {
-		//for all walls in the maze
-		//if(cam.collide(wall))..
 	}
 
 

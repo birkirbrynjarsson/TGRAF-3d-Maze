@@ -196,4 +196,21 @@ public class Camera {
         matrixBuffer.rewind();
         Gdx.gl.glUniformMatrix4fv(viewMatrixPointer, 1, false, matrixBuffer);
     }
+
+    // Checking if the player has collided with token
+    public boolean gotToken(Token token) {
+        float distX = eye.x - token.x;
+        float distY = eye.z - token.z;
+        if(distX < 0){
+            distX = -distX;
+        }
+        if(distY < 0){
+            distY = -distY;
+        }
+        if((distX <= (near + token.size)) && (distY <= (near + token.size))) {
+            return true;
+        }
+        else
+            return false;
+    }
 }

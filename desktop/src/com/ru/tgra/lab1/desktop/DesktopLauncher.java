@@ -9,7 +9,7 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 
 		config.title = "aMazeBalls"; // or whatever you like
-		config.width = 748;  //experiment with
+		config.width = 1048;  //experiment with
 		config.height = 748;  //the window size
 		config.x = 150;
 		config.y = 50;
