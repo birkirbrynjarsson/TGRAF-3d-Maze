@@ -201,6 +201,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 				orthoCam.setShaderMatrices();
 			}
 
+
 			// ----------------------------------
 			// 		 Draw our MAZE here
 			// ----------------------------------
@@ -239,6 +240,9 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 				ModelMatrix.main.setShaderMatrix();
 				BoxGraphic.drawSolidCube();
 				ModelMatrix.main.popMatrix();
+
+				String ourPosition = "x: " + cam.eye.x + " y: " + cam.eye.y + " z: " + cam.eye.z;
+				System.out.println(ourPosition);
 			}
 		}
 	}
