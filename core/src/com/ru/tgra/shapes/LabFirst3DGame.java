@@ -33,10 +33,12 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 	private boolean firstPerson;
 	private boolean thirdPerson;
 	private float playerDirection;
+	private int score;
 
 	// Camera variables
 	private Camera cam;
 	private Camera orthoCam;
+	private Camera scoreCam;
 	float angle;
 
 	// Token variables
@@ -106,22 +108,6 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 
-		// ----------------------------------
-		// 		Camera init & settings
-		// ----------------------------------
-		cam = new Camera(viewMatrixLoc, projectionMatrixLoc);
-		cam.perspectiveProjection(fov, 1.0f, 0.4f, 100.0f);
-//		cam.look(new Point3D(-13f, 3f, 0f), new Point3D(0,3,0), new Vector3D(0,1,0));
-		cam.look(new Point3D(0, 3f, 0f), new Point3D(1,3,0), new Vector3D(0,1,0));
-		orthoCam = new Camera(viewMatrixLoc, projectionMatrixLoc);
-		orthoCam.orthographicProjection(-30.0f,30.0f,-30.0f,30.0f,1.0f, 100.0f);
-
-		// ----------------------------------
-		// 		  Game play settings
-		// ----------------------------------
-		firstPerson = true;
-		thirdPerson = false;
-		playerDirection = 0f;
 
 
 
@@ -129,6 +115,28 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		int mazeSize = 12;
 		float cellSize = 6f;
 		maze = new Maze(mazeSize, mazeSize, cellSize, ModelMatrix.main, colorLoc, positionLoc, normalLoc);
+
+		// ----------------------------------
+		// 		Camera init & settings
+		// ----------------------------------
+		// --- Player camera ---
+		cam = new Camera(viewMatrixLoc, projectionMatrixLoc);
+		cam.perspectiveProjection(fov, 1.0f, 0.4f, 100.0f);
+		cam.look(new Point3D((cellSize/2), 3f, (cellSize/2)), new Point3D(6,3,(cellSize/2)), new Vector3D(0,1,0));
+		// --- Mini map camera ---
+		orthoCam = new Camera(viewMatrixLoc, projectionMatrixLoc);
+		orthoCam.orthographicProjection(-30.0f,30.0f,-30.0f,30.0f,1.0f, 100.0f);
+		// --- Score camera ---
+		scoreCam = new Camera(viewMatrixLoc, projectionMatrixLoc);
+		scoreCam.orthographicProjection(-83.3f,83.3f,-25.0f,25.0f,1.0f, 100.0f);
+
+		// ----------------------------------
+		// 		  Game play settings
+		// ----------------------------------
+		firstPerson = true;
+		thirdPerson = false;
+		playerDirection = 0f;
+		score = 0;
 
 		// ----------------------------------
 		// 		  Token settings
@@ -188,6 +196,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 			token.bounce(deltaTime);
 			if(cam.gotToken(token)) {
 				removedToken = token;
+				score++;
 			}
 		}
 
@@ -218,8 +227,8 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 			// -- The minimap view --
 			else
 			{
-				int miniMapHeight = Gdx.graphics.getHeight() / 3;
-				int miniMapWidth = Gdx.graphics.getWidth() / 3;
+				int miniMapHeight = 250;
+				int miniMapWidth = 250;
 				Gdx.gl.glViewport((Gdx.graphics.getWidth() - miniMapWidth), Gdx.graphics.getHeight() - miniMapHeight, miniMapWidth, miniMapHeight);
 				orthoCam.look(new Point3D(cam.eye.x, 10.0f, cam.eye.z), cam.eye, new Vector3D(0,0,-1));
 				orthoCam.setShaderMatrices();
@@ -272,6 +281,29 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 //				String ourPosition = "x: " + cam.eye.x + " y: " + cam.eye.y + " z: " + cam.eye.z;
 //				System.out.println(ourPosition);
 			}
+		}
+
+		int scoreHeight = 150;
+		int scoreWidth = 500;
+		int scoreSlotX = scoreWidth/TOKEN_NUMBER;
+		int scoreSlotY = scoreHeight/2;
+		Gdx.gl.glViewport(0, Gdx.graphics.getHeight() - scoreHeight, scoreWidth, scoreHeight);
+
+		scoreCam.look(new Point3D(-100,10,-100), new Point3D(-100,1,-100), new Vector3D(0,0,-1));
+		scoreCam.setShaderMatrices();
+
+		int x = -150;
+		int z = -110;
+		for(int i = 0; i < score; i++) {
+			Gdx.gl.glUniform4f(colorLoc, 1f, 1f, 0f, 1f);
+			ModelMatrix.main.loadIdentityMatrix();
+			ModelMatrix.main.pushMatrix();
+			ModelMatrix.main.addScale(5f, 0.4f, 5f);
+			ModelMatrix.main.addTranslationBaseCoords(x,1f,z);
+			ModelMatrix.main.setShaderMatrix();
+			SphereGraphic.drawSolidSphere();
+			ModelMatrix.main.popMatrix();
+			x += 20;
 		}
 	}
 

@@ -163,7 +163,7 @@ public class Camera {
         if(distY < 0){
             distY = -distY;
         }
-        if((distX <= near) && (distY <= near)) {
+        if((distX <= (near + token.size)) && (distY <= (near + token.size))) {
             return true;
         }
         else
