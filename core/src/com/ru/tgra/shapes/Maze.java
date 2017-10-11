@@ -33,12 +33,16 @@ public class Maze
     }
 
     public void display() {
+
+        displayFloor();
+//        displayRoof();
         int i, j;
         for (i = 0; i < y; i++) {
             // draw the north edge
             for (j = 0; j < x; j++) {
                 //System.out.print((maze[j][i] & 1) == 0 ? "+---" : "+   ");
                 if((maze[j][i] & 1) == 0 ) {
+                    displayPillar(i, j);
                     displayHorWall(i, j);
                 }
                 else {
@@ -128,6 +132,28 @@ public class Maze
             this.dx = dx;
             this.dy = dy;
         }
+    }
+
+    private void displayFloor(){
+        Gdx.gl.glUniform4f(colorLoc, 0.5f, 1f, 0.3f, 1f);
+        mm.loadIdentityMatrix();
+        mm.pushMatrix();
+        mm.addScale(x * cellSize, 1f, y * cellSize);
+        mm.addTranslationBaseCoords((x * cellSize)/2,0.5f,(y * cellSize)/2);
+        mm.setShaderMatrix();
+        BoxGraphic.drawSolidCube();
+        mm.popMatrix();
+    }
+
+    private void displayRoof(){
+        Gdx.gl.glUniform4f(colorLoc, 0.2f, 0.8f, 0.2f, 0.5f);
+        mm.loadIdentityMatrix();
+        mm.pushMatrix();
+        mm.addScale(x * cellSize, height, y * cellSize);
+        mm.addTranslationBaseCoords((x * cellSize)/2,0.5f,(y * cellSize)/2);
+        mm.setShaderMatrix();
+        BoxGraphic.drawSolidCube();
+        mm.popMatrix();
     }
 
     private void displayVerWall(int i, int j){

@@ -39,7 +39,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 	float angle;
 
 	private int colorLoc;
-	private float fov = 50.0f;
+	private float fov = 90.0f;
 
 	private float bouncingBallY = 0;
 
@@ -108,7 +108,8 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		// ----------------------------------
 		cam = new Camera(viewMatrixLoc, projectionMatrixLoc);
 		cam.perspectiveProjection(fov, 1.0f, 0.4f, 100.0f);
-		cam.look(new Point3D(-13f, 3f, 0f), new Point3D(0,3,0), new Vector3D(0,1,0));
+//		cam.look(new Point3D(-13f, 3f, 0f), new Point3D(0,3,0), new Vector3D(0,1,0));
+		cam.look(new Point3D(0, 3f, 0f), new Point3D(1,3,0), new Vector3D(0,1,0));
 		orthoCam = new Camera(viewMatrixLoc, projectionMatrixLoc);
 		orthoCam.orthographicProjection(-30.0f,30.0f,-30.0f,30.0f,1.0f, 100.0f);
 
@@ -202,27 +203,19 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 			}
 
 			// ----------------------------------
-			// 		 Draw our matrix here
+			// 		 Draw our MAZE here
 			// ----------------------------------
 
 			maze.display();
 
 			Gdx.gl.glUniform4f(colorLoc, 1f, 0f, 0f, 1f);
 
-			ModelMatrix.main.loadIdentityMatrix();
-			ModelMatrix.main.pushMatrix();
-			ModelMatrix.main.addScale(2.0f, 2.0f, 2.0f);
-			ModelMatrix.main.addTranslationBaseCoords(9, 5,-2);
-			ModelMatrix.main.setShaderMatrix();
-			BoxGraphic.drawSolidCube();
-
-			Gdx.gl.glUniform4f(colorLoc, 0.2f, 0.8f, 0.2f, 0.5f);
-			ModelMatrix.main.loadIdentityMatrix();
-			ModelMatrix.main.addScale(10f, 0.8f, 10f);
-			ModelMatrix.main.addTranslationBaseCoords(1,0.5f,1);
-			ModelMatrix.main.setShaderMatrix();
-			BoxGraphic.drawSolidCube();
-			ModelMatrix.main.popMatrix();
+//			ModelMatrix.main.loadIdentityMatrix();
+//			ModelMatrix.main.pushMatrix();
+//			ModelMatrix.main.addScale(2.0f, 2.0f, 2.0f);
+//			ModelMatrix.main.addTranslationBaseCoords(9, 5,-2);
+//			ModelMatrix.main.setShaderMatrix();
+//			BoxGraphic.drawSolidCube();
 
 			// --- Our position in the mini map ---
 			if(viewNum == 1)
