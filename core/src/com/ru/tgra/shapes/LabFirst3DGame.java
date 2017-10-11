@@ -219,7 +219,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 			Gdx.gl.glUniform4f(colorLoc, 0.2f, 0.8f, 0.2f, 0.5f);
 			ModelMatrix.main.loadIdentityMatrix();
 			ModelMatrix.main.addScale(10f, 0.8f, 10f);
-			ModelMatrix.main.addTranslationBaseCoords(1,0.4f,1);
+			ModelMatrix.main.addTranslationBaseCoords(1,0.5f,1);
 			ModelMatrix.main.setShaderMatrix();
 			BoxGraphic.drawSolidCube();
 			ModelMatrix.main.popMatrix();
@@ -235,6 +235,15 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 				ModelMatrix.main.addScale(2.0f, 2.0f, 2.0f);
 				ModelMatrix.main.addTranslationBaseCoords(cam.eye.x, cam.eye.y,cam.eye.z);
 				ModelMatrix.main.addRotationY(playerDirection);
+				ModelMatrix.main.setShaderMatrix();
+				BoxGraphic.drawSolidCube();
+				//.main.popMatrix();
+
+				// --- Background in the mini map ---
+				Gdx.gl.glUniform4f(colorLoc, 0f, 0f, 0f, 1f);
+				ModelMatrix.main.loadIdentityMatrix();
+				ModelMatrix.main.addScale(1000f, 0.4f, 1000f);
+				ModelMatrix.main.addTranslationBaseCoords(1,0.2f,1);
 				ModelMatrix.main.setShaderMatrix();
 				BoxGraphic.drawSolidCube();
 				ModelMatrix.main.popMatrix();

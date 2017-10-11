@@ -26,7 +26,7 @@ public class Maze
         this.mm = mm;
         this.colorLoc = colorLoc;
         this.width = cellSize/5;
-        this.height = 5f;
+        this.height = 10f;
         generateMaze(0, 0);
         this.positionLoc = positionLoc;
         this.normalLoc = normalLoc;
@@ -142,8 +142,6 @@ public class Maze
     }
 
     private void displayHorWall(int i, int j){
-
-
         Gdx.gl.glUniform4f(colorLoc, 0.6f,0.0f,0.6f, 1.0f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
