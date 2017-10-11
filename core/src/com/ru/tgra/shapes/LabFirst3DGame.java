@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.GL20;
 
 import java.awt.*;
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
+import java.util.Random;
 
 import com.badlogic.gdx.utils.BufferUtils;
 
@@ -27,23 +29,24 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 	private int viewMatrixLoc;
 	private int projectionMatrixLoc;
 
-	// Player viewing options
+	// Player variables
 	private boolean firstPerson;
 	private boolean thirdPerson;
-
 	private float playerDirection;
 
-	// Our cameras
+	// Camera variables
 	private Camera cam;
 	private Camera orthoCam;
 	float angle;
 
+	// Token variables
+	private ArrayList<Token> tokens;
+	private int TOKEN_NUMBER = 5;
+	private Random rand;
+
 	private int colorLoc;
 	private float fov = 90.0f;
 
-	private float bouncingBallY = 0;
-
-	private ModelMatrix modelMatrix;
 	private Maze maze;
 
 	@Override
@@ -120,8 +123,27 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		thirdPerson = false;
 		playerDirection = 0f;
 
+
+
 		// Birkir and his amazing maze
-		maze = new Maze(12, 12, 6f, ModelMatrix.main, colorLoc, positionLoc, normalLoc);
+		int mazeSize = 12;
+		float cellSize = 6f;
+		maze = new Maze(mazeSize, mazeSize, cellSize, ModelMatrix.main, colorLoc, positionLoc, normalLoc);
+
+		// ----------------------------------
+		// 		  Token settings
+		// ----------------------------------
+		rand = new Random();
+
+		tokens = new ArrayList<Token>();
+		// Initialize game tokens
+		for(int i = 0; i < TOKEN_NUMBER; i++) {
+			float x = ((rand.nextInt(mazeSize) * cellSize) + (cellSize/2));
+			float y = ((rand.nextInt(mazeSize) * cellSize) + (cellSize/2));
+
+			tokens.add(new Token(x, y, ModelMatrix.main, colorLoc));
+		}
+
 	}
 
 
@@ -138,12 +160,6 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
 			cam.yaw(90.f * deltaTime);
 			playerDirection += 90f * deltaTime;
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
-			//cam.pitch(-90.f * deltaTime);
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-			//cam.pitch(90.f * deltaTime);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
 			cam.slide(-3.0f * deltaTime, 0, 0);
@@ -163,13 +179,20 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		if(Gdx.input.isKeyPressed(Input.Keys.F)) {
 			cam.slide(0, 3.0f * deltaTime, 0);
 		}
-		if(Gdx.input.isKeyPressed(Input.Keys.Q)) {
-			//cam.roll(-90.f * deltaTime);
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.E)) {
-			//cam.roll(90.f * deltaTime);
-		}
+
 		maze.isWalls(cam.eye);
+
+		Token removedToken = null;
+
+		for(Token token : tokens) {
+			token.bounce(deltaTime);
+			if(cam.gotToken(token)) {
+				removedToken = token;
+			}
+		}
+
+		if(removedToken != null)
+			tokens.remove(removedToken);
 
 	}
 
@@ -209,7 +232,9 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 			maze.display(viewNum == 0);
 
-			Gdx.gl.glUniform4f(colorLoc, 1f, 0f, 0f, 1f);
+			for(Token token : tokens) {
+				token.display();
+			}
 
 //			ModelMatrix.main.loadIdentityMatrix();
 //			ModelMatrix.main.pushMatrix();
@@ -244,8 +269,8 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 				BoxGraphic.drawSolidCube();
 				ModelMatrix.main.popMatrix();
 
-				String ourPosition = "x: " + cam.eye.x + " y: " + cam.eye.y + " z: " + cam.eye.z;
-				System.out.println(ourPosition);
+//				String ourPosition = "x: " + cam.eye.x + " y: " + cam.eye.y + " z: " + cam.eye.z;
+//				System.out.println(ourPosition);
 			}
 		}
 	}
@@ -257,12 +282,6 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		update();
 		display();
 
-	}
-
-
-	void collisionDetection() {
-		//for all walls in the maze
-		//if(cam.collide(wall))..
 	}
 
 
