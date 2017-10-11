@@ -45,6 +45,8 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 	private ModelMatrix modelMatrix;
 	private Maze maze;
+	private float movementSpeed = 3f; // used with deltatime, WASD keys
+	private float playerSize = 1f; // Radius of player circle, for collision and display in 2D
 
 	@Override
 	public void create () {
@@ -109,7 +111,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		cam = new Camera(viewMatrixLoc, projectionMatrixLoc);
 		cam.perspectiveProjection(fov, 1.0f, 0.4f, 100.0f);
 //		cam.look(new Point3D(-13f, 3f, 0f), new Point3D(0,3,0), new Vector3D(0,1,0));
-		cam.look(new Point3D(0, 3f, 0f), new Point3D(1,3,0), new Vector3D(0,1,0));
+		cam.look(new Point3D(3, 3f, 3f), new Point3D(1,3,0), new Vector3D(0,1,0));
 		orthoCam = new Camera(viewMatrixLoc, projectionMatrixLoc);
 		orthoCam.orthographicProjection(-30.0f,30.0f,-30.0f,30.0f,1.0f, 100.0f);
 
@@ -146,22 +148,32 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 			//cam.pitch(90.f * deltaTime);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
-			cam.slide(-3.0f * deltaTime, 0, 0);
+//			cam.slide(-movementSpeed * deltaTime, 0, 0);
+			cam.slideMaze(-movementSpeed * deltaTime, 0, 0, maze, playerSize);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.D)) {
-			cam.slide(3.0f * deltaTime, 0, 0);
+//			cam.slide(movementSpeed * deltaTime, 0, 0);
+			cam.slideMaze(movementSpeed * deltaTime, 0, 0, maze, playerSize);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.W)) {
-			cam.slide(0, 0, -3.0f * deltaTime);
+			// Moving straight forward
+//			Vector3D forwardVector = new Vector3D(-cam.n.x * (movementSpeed * deltaTime), -cam.n.y * (movementSpeed * deltaTime), -cam.n.z * (movementSpeed * deltaTime));
+//			Vector3D newForward = maze.correctedToWalls(cam.eye, forwardVector, playerSize);
+
+//			System.out.println("N Vector, x: " + forwardVector.x + ", y: " + forwardVector.y + ", z: " + forwardVector.z);
+
+//			cam.slide(0, 0, -movementSpeed * deltaTime);
+			cam.slideMaze(0, 0, -movementSpeed * deltaTime, maze, playerSize);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.S)) {
-			cam.slide(0, 0, 3.0f * deltaTime);
+//			cam.slide(0, 0, movementSpeed * deltaTime);
+			cam.slideMaze(0, 0, movementSpeed * deltaTime, maze, playerSize);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.R)) {
-			cam.slide(0, -3.0f * deltaTime, 0);
+			cam.slide(0, -movementSpeed * deltaTime, 0);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.F)) {
-			cam.slide(0, 3.0f * deltaTime, 0);
+			cam.slide(0, movementSpeed * deltaTime, 0);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.Q)) {
 			//cam.roll(-90.f * deltaTime);
@@ -227,7 +239,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 				//ModelMatrix.main.addTranslation(250, 250, 0);
 				ModelMatrix.main.pushMatrix();
 //				ModelMatrix.main.addScale(2.0f, 2.0f, 2.0f);
-				ModelMatrix.main.addScale(1.0f, 1.0f, 1.0f);
+				ModelMatrix.main.addScale(playerSize, playerSize, playerSize);
 				ModelMatrix.main.addTranslationBaseCoords(cam.eye.x, cam.eye.y,cam.eye.z);
 				ModelMatrix.main.addRotationY(playerDirection);
 				ModelMatrix.main.setShaderMatrix();
@@ -243,9 +255,6 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 				ModelMatrix.main.setShaderMatrix();
 				BoxGraphic.drawSolidCube();
 				ModelMatrix.main.popMatrix();
-
-				String ourPosition = "x: " + cam.eye.x + " y: " + cam.eye.y + " z: " + cam.eye.z;
-				System.out.println(ourPosition);
 			}
 		}
 	}

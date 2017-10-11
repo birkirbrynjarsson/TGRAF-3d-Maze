@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 
 import java.util.Collections;
 import java.util.Arrays;
+import java.util.Vector;
 
 public class Maze
 {
@@ -17,6 +18,7 @@ public class Maze
     private float height;
     private int positionLoc;
     private int normalLoc;
+    private long time;
 
     public Maze(int x, int y, float cellSize, ModelMatrix mm, int colorLoc, int positionLoc, int normalLoc) {
         this.x = x;
@@ -30,6 +32,8 @@ public class Maze
         generateMaze(0, 0);
         this.positionLoc = positionLoc;
         this.normalLoc = normalLoc;
+        time = System.nanoTime();
+
     }
 
     public void display(boolean roofOn) {
@@ -194,11 +198,70 @@ public class Maze
         BoxGraphic.drawSolidCube();
         mm.popMatrix();
     }
+
     public void isWalls(Point3D point){
         float xPoint = point.x/cellSize;
         float zPoint = point.z/cellSize;
-        System.out.println("xPoint = " + xPoint + ", zPoint = " + zPoint);
-        System.out.println("Maze 11: " + maze[1][1] + ", Maze 12: " + maze[1][2] + ", Maze 13: " + maze[1][3]);
-        System.out.println("Maze 21: " + maze[2][1] + ", Maze 22: " + maze[2][2] + ", Maze 23: " + maze[2][3]);
+        if((System.nanoTime() - time) > 2000000000l){
+            String ourPosition = "x: " + point.x + " y: " + point.y + " z: " + point.z;
+            System.out.println(ourPosition);
+            System.out.println("xPoint = " + xPoint + ", zPoint = " + zPoint);
+            System.out.println("INT, X: " + (int)xPoint + ", Z: " + (int)zPoint);
+            // Use X point in 2nd array
+            System.out.println("CELL: " + maze[(int)zPoint][(int)xPoint]);
+            if((maze[(int)zPoint][(int)xPoint] & 8) == 0){
+                System.out.println("Wall North");
+            }
+            if((maze[(int)zPoint][(int)xPoint] & 4) == 0){
+                System.out.println("Wall South");
+            }
+            if((maze[(int)zPoint][(int)xPoint] & 2) == 0){
+                System.out.println("Wall East");
+            }
+            if((maze[(int)zPoint][(int)xPoint] & 1) == 0){
+                System.out.println("Wall West");
+            }
+            time = System.nanoTime();
+        }
+    }
+
+    public float cellLimitNorth(float x, float z){
+        float xPoint = x/cellSize;
+        float zPoint = z/cellSize;
+        if((maze[(int)zPoint][(int)xPoint] & 8) == 0){
+//            System.out.println("Wall North");
+            return (float)(int)zPoint * cellSize + width/2;
+        }
+        return 0f;
+    }
+
+    public float cellLimitSouth(float x, float z){
+        float xPoint = x/cellSize;
+        float zPoint = z/cellSize;
+        if((maze[(int)zPoint][(int)xPoint] & 4) == 0){
+//            System.out.println("Wall North");
+            return (float)(int)zPoint * cellSize - width/2 + cellSize;
+        }
+        return 0f;
+    }
+
+    public float cellLimitEast(float x, float z){
+        float xPoint = x/cellSize;
+        float zPoint = z/cellSize;
+        if((maze[(int)zPoint][(int)xPoint] & 2) == 0){
+            System.out.println("Wall East");
+            return (float)(int)xPoint * cellSize - width/2 + cellSize;
+        }
+        return 0f;
+    }
+
+    public float cellLimitWest(float x, float z){
+        float xPoint = x/cellSize;
+        float zPoint = z/cellSize;
+        if((maze[(int)zPoint][(int)xPoint] & 1) == 0){
+            System.out.println("Wall West");
+            return (float)(int)xPoint * cellSize + width/2;
+        }
+        return 0f;
     }
 }

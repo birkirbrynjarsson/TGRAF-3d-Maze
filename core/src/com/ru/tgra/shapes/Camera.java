@@ -62,6 +62,50 @@ public class Camera {
         eye.z += delU*u.z + delV*v.z + delN*n.z;
     }
 
+    public void slideMaze(float delU, float delV, float delN, Maze maze, float radius){
+        float eyeX = eye.x + (delU*u.x + delV*v.x + delN*n.x);
+        float eyeZ = eye.z + (delU*u.z + delV*v.z + delN*n.z);
+
+        if((eye.x - eyeX) < 0.0f){ // Moving East
+            System.out.println("Moving East");
+            float limitEast = maze.cellLimitEast(eyeX, eyeZ);
+            System.out.println("Limit East: " + limitEast);
+            if(limitEast != 0f && eyeX + radius < limitEast){
+                eye.x = eyeX;
+            } else if(limitEast == 0f){
+                eye.x = eyeX;
+            }
+        } else if((eye.x - eyeX) > 0.0f) { // Moving West
+            System.out.println("Moving West");
+            float limitWest = maze.cellLimitWest(eyeX, eyeZ);
+            System.out.println("Limit West: " + limitWest);
+            if(limitWest != 0f && eyeX - radius > limitWest){
+                eye.x = eyeX;
+            } else if(limitWest == 0f){
+                eye.x = eyeX;
+            }
+        }
+        if((eye.z - eyeZ) < 0.0f){ // Moving South
+            System.out.println("Moving South");
+            float limitSouth = maze.cellLimitSouth(eyeX, eyeZ);
+            System.out.println("Limit South: " + limitSouth);
+            if(limitSouth != 0f && eyeZ + radius < limitSouth){
+                eye.z = eyeZ;
+            } else if(limitSouth == 0f){
+                eye.z = eyeZ;
+            }
+        } else if((eye.z - eyeZ) > 0.0f){ // Moving North
+            System.out.println("Moving North");
+            float limitNorth = maze.cellLimitNorth(eyeX, eyeZ);
+            System.out.println("Limit North: " + limitNorth);
+            if(limitNorth != 0f && eyeZ - radius > limitNorth){
+                eye.z = eyeZ;
+            } else if(limitNorth == 0f){
+                eye.z = eyeZ;
+            }
+        }
+    }
+
     public void roll(float angle)
     {
         float radians = angle * (float)Math.PI / 180.0f;
