@@ -53,6 +53,9 @@ public class Maze
                 if((maze[j][i] & 8) == 0){
                     displayVerWall(i, j);
                 }
+                else {
+                    displayPillar(i, j);
+                }
                 // Nothing
             }
             displayVerWall(i, j);

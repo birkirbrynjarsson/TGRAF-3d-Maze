@@ -176,7 +176,6 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		//do all actual drawing and rendering here
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-
 		for(int viewNum = 0; viewNum < 2; viewNum++)
 		{
 			// --- The player view ---
