@@ -217,7 +217,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 			{
 				if(firstPerson) {
 					Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-					cam.perspectiveProjection(fov, 1.0f, 0.1f, 100.0f);
+					cam.perspectiveProjection(fov, 1.4f, 0.1f, 100.0f);
 					cam.setShaderMatrices();
 				}
 				else if(thirdPerson) {
