@@ -32,10 +32,12 @@ public class Maze
         this.normalLoc = normalLoc;
     }
 
-    public void display() {
+    public void display(boolean roofOn) {
 
         displayFloor();
-//        displayRoof();
+        if(roofOn){
+            displayRoof();
+        }
         int i, j;
         for (i = 0; i < y; i++) {
             // draw the north edge
@@ -138,7 +140,7 @@ public class Maze
     }
 
     private void displayFloor(){
-        Gdx.gl.glUniform4f(colorLoc, 0.5f, 1f, 0.3f, 1f);
+        Gdx.gl.glUniform4f(colorLoc, 1f, 1f, 1f, 1f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
         mm.addScale(x * cellSize, 1f, y * cellSize);
@@ -149,7 +151,7 @@ public class Maze
     }
 
     private void displayRoof(){
-        Gdx.gl.glUniform4f(colorLoc, 0.2f, 0.8f, 0.2f, 0.5f);
+        Gdx.gl.glUniform4f(colorLoc, 1f, 1f, 1f, 1f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
         mm.addScale(x * cellSize, height, y * cellSize);
@@ -160,7 +162,8 @@ public class Maze
     }
 
     private void displayVerWall(int i, int j){
-        Gdx.gl.glUniform4f(colorLoc, 0.6f,0.0f,0.6f, 1.0f);
+//        Gdx.gl.glUniform4f(colorLoc, 0.6f,0.0f,0.6f, 1.0f);
+        Gdx.gl.glUniform4f(colorLoc, 1f,1f,1f, 1.0f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
         mm.addScale(cellSize, height, width);
@@ -171,7 +174,7 @@ public class Maze
     }
 
     private void displayHorWall(int i, int j){
-        Gdx.gl.glUniform4f(colorLoc, 0.6f,0.0f,0.6f, 1.0f);
+        Gdx.gl.glUniform4f(colorLoc, 1f,1f,1f, 1.0f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
         mm.addScale(width, height, cellSize);
@@ -182,7 +185,7 @@ public class Maze
     }
 
     private void displayPillar(int i, int j){
-        Gdx.gl.glUniform4f(colorLoc, 0.6f,0.0f,0.6f, 1.0f);
+        Gdx.gl.glUniform4f(colorLoc, 1f,1f,1f, 1.0f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
         mm.addScale(width, height, width);
@@ -190,5 +193,12 @@ public class Maze
         mm.setShaderMatrix();
         BoxGraphic.drawSolidCube();
         mm.popMatrix();
+    }
+    public void isWalls(Point3D point){
+        float xPoint = point.x/cellSize;
+        float zPoint = point.z/cellSize;
+        System.out.println("xPoint = " + xPoint + ", zPoint = " + zPoint);
+        System.out.println("Maze 11: " + maze[1][1] + ", Maze 12: " + maze[1][2] + ", Maze 13: " + maze[1][3]);
+        System.out.println("Maze 21: " + maze[2][1] + ", Maze 22: " + maze[2][2] + ", Maze 23: " + maze[2][3]);
     }
 }

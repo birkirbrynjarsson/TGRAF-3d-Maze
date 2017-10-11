@@ -169,6 +169,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		if(Gdx.input.isKeyPressed(Input.Keys.E)) {
 			//cam.roll(90.f * deltaTime);
 		}
+		maze.isWalls(cam.eye);
 
 	}
 
@@ -206,7 +207,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 			// 		 Draw our MAZE here
 			// ----------------------------------
 
-			maze.display();
+			maze.display(viewNum == 0);
 
 			Gdx.gl.glUniform4f(colorLoc, 1f, 0f, 0f, 1f);
 
@@ -225,11 +226,13 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 				ModelMatrix.main.loadIdentityMatrix();
 				//ModelMatrix.main.addTranslation(250, 250, 0);
 				ModelMatrix.main.pushMatrix();
-				ModelMatrix.main.addScale(2.0f, 2.0f, 2.0f);
+//				ModelMatrix.main.addScale(2.0f, 2.0f, 2.0f);
+				ModelMatrix.main.addScale(1.0f, 1.0f, 1.0f);
 				ModelMatrix.main.addTranslationBaseCoords(cam.eye.x, cam.eye.y,cam.eye.z);
 				ModelMatrix.main.addRotationY(playerDirection);
 				ModelMatrix.main.setShaderMatrix();
-				BoxGraphic.drawSolidCube();
+				SphereGraphic.drawSolidSphere();
+//				BoxGraphic.drawSolidCube();
 				//.main.popMatrix();
 
 				// --- Background in the mini map ---
