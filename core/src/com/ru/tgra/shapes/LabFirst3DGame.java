@@ -160,6 +160,8 @@ public class LabFirst3DGame extends ApplicationAdapter {
 
 		angle += 180.0f * deltaTime;
 
+		Gdx.input.setCursorCatched(true);
+
 		if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
 			cam.yaw(-90.f * deltaTime);
 			playerDirection -= 90f * deltaTime;
@@ -221,6 +223,9 @@ public class LabFirst3DGame extends ApplicationAdapter {
 				cam.pitch(90.f * deltaTime);
 			}
 		}
+
+		cam.roll(-Gdx.input.getDeltaX()* deltaTime);
+		cam.pitch(-Gdx.input.getDeltaY()* deltaTime);
 
 		if(Gdx.input.isKeyJustPressed(Input.Keys.V)) {
 			if(playerViewMode == GOD_MODE) {
