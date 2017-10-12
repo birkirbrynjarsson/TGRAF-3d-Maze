@@ -225,43 +225,51 @@ public class Maze
         }
     }
 
-    public float cellLimitNorth(float x, float z){
-        float xPoint = x/cellSize;
+    public float cellLimitNorth(float z){
         float zPoint = z/cellSize;
-        if((maze[(int)zPoint][(int)xPoint] & 8) == 0){
-//            System.out.println("Wall North");
-            return (float)(int)zPoint * cellSize + width/2;
-        }
-        return 0f;
+        return (float)(int)zPoint * cellSize + width/2;
     }
 
-    public float cellLimitSouth(float x, float z){
-        float xPoint = x/cellSize;
+    public float cellLimitSouth(float z){
         float zPoint = z/cellSize;
-        if((maze[(int)zPoint][(int)xPoint] & 4) == 0){
-//            System.out.println("Wall North");
-            return (float)(int)zPoint * cellSize - width/2 + cellSize;
-        }
-        return 0f;
+        return (float)(int)zPoint * cellSize - width/2 + cellSize;
     }
 
-    public float cellLimitEast(float x, float z){
+    public float cellLimitEast(float x){
         float xPoint = x/cellSize;
-        float zPoint = z/cellSize;
-        if((maze[(int)zPoint][(int)xPoint] & 2) == 0){
-            System.out.println("Wall East");
-            return (float)(int)xPoint * cellSize - width/2 + cellSize;
-        }
-        return 0f;
+        return (float)(int)xPoint * cellSize - width/2 + cellSize;
     }
 
-    public float cellLimitWest(float x, float z){
+    public float cellLimitWest(float x){
+        float xPoint = x/cellSize;
+        return (float)(int)xPoint * cellSize + width/2;
+    }
+
+    boolean openNorth(float x, float z){
         float xPoint = x/cellSize;
         float zPoint = z/cellSize;
-        if((maze[(int)zPoint][(int)xPoint] & 1) == 0){
-            System.out.println("Wall West");
-            return (float)(int)xPoint * cellSize + width/2;
-        }
-        return 0f;
+        if((maze[(int)zPoint][(int)xPoint] & 8) == 0) return false;
+        return true;
+    }
+
+    boolean openSouth(float x, float z){
+        float xPoint = x/cellSize;
+        float zPoint = z/cellSize;
+        if((maze[(int)zPoint][(int)xPoint] & 4) == 0) return false;
+        return true;
+    }
+
+    boolean openEast(float x, float z){
+        float xPoint = x/cellSize;
+        float zPoint = z/cellSize;
+        if((maze[(int)zPoint][(int)xPoint] & 2) == 0) return false;
+        return true;
+    }
+
+    boolean openWest(float x, float z){
+        float xPoint = x/cellSize;
+        float zPoint = z/cellSize;
+        if((maze[(int)zPoint][(int)xPoint] & 1) == 0) return false;
+        return true;
     }
 }
