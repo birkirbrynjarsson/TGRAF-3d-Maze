@@ -14,7 +14,7 @@ import java.util.Random;
 
 import com.badlogic.gdx.utils.BufferUtils;
 
-public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor {
+public class LabFirst3DGame extends ApplicationAdapter {
 
 	private FloatBuffer matrixBuffer;
 
@@ -35,6 +35,11 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 	private float playerDirection;
 	private int score;
 
+	// Game variables
+	private int level;
+	private int mazeSize;
+	private float cellSize;
+
 	// Camera variables
 	private Camera cam;
 	private Camera orthoCam;
@@ -43,11 +48,11 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 	// Token variables
 	private ArrayList<Token> tokens;
-	private int TOKEN_NUMBER = 5;
+	private int TOKEN_NUMBER = 12;
 	private Random rand;
 
 	private int colorLoc;
-	private float fov = 90.0f;
+	private float fov = 50.0f;
 
 	private Maze maze;
 	private float movementSpeed = 3f; // used with deltatime, WASD keys
@@ -55,8 +60,6 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 	@Override
 	public void create () {
-
-		Gdx.input.setInputProcessor(this);
 
 		String vertexShaderString;
 		String fragmentShaderString;
@@ -111,11 +114,9 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 
 
-
-
 		// Birkir and his amazing maze
-		int mazeSize = 12;
-		float cellSize = 6f;
+		mazeSize = 12;
+		cellSize = 6f;
 		maze = new Maze(mazeSize, mazeSize, cellSize, ModelMatrix.main, colorLoc, positionLoc, normalLoc);
 
 		// ----------------------------------
@@ -124,7 +125,6 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		// --- Player camera ---
 		cam = new Camera(viewMatrixLoc, projectionMatrixLoc);
 		cam.perspectiveProjection(fov, 1.0f, 0.4f, 100.0f);
-//		cam.look(new Point3D(-13f, 3f, 0f), new Point3D(0,3,0), new Vector3D(0,1,0));
 		cam.look(new Point3D((cellSize/2), 3f, (cellSize/2)), new Point3D(6,3,(cellSize/2)), new Vector3D(0,1,0));
 		// --- Mini map camera ---
 		orthoCam = new Camera(viewMatrixLoc, projectionMatrixLoc);
@@ -140,6 +140,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		thirdPerson = false;
 		playerDirection = 0f;
 		score = 0;
+		level = 1;
 
 		// ----------------------------------
 		// 		  Token settings
@@ -203,6 +204,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 		maze.isWalls(cam.eye);
 
+		// --- Token updates ---
 		Token removedToken = null;
 
 		for(Token token : tokens) {
@@ -215,6 +217,11 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 		if(removedToken != null)
 			tokens.remove(removedToken);
+
+		// --- Level updates ---
+		if(score == TOKEN_NUMBER) {
+			levelUp();
+		}
 
 	}
 
@@ -258,13 +265,6 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 				token.display();
 			}
 
-//			ModelMatrix.main.loadIdentityMatrix();
-//			ModelMatrix.main.pushMatrix();
-//			ModelMatrix.main.addScale(2.0f, 2.0f, 2.0f);
-//			ModelMatrix.main.addTranslationBaseCoords(9, 5,-2);
-//			ModelMatrix.main.setShaderMatrix();
-//			BoxGraphic.drawSolidCube();
-
 			// --- Our position in the mini map ---
 			if(viewNum == 1)
 			{
@@ -293,27 +293,49 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 			}
 		}
 
+		// ----------------------------------
+		// 		    Score display
+		// ----------------------------------
+		displayScore();
+	}
+
+	public void displayScore() {
+
 		int scoreHeight = 150;
 		int scoreWidth = 500;
-		int scoreSlotX = scoreWidth/TOKEN_NUMBER;
-		int scoreSlotY = scoreHeight/2;
+
 		Gdx.gl.glViewport(0, Gdx.graphics.getHeight() - scoreHeight, scoreWidth, scoreHeight);
 
-		scoreCam.look(new Point3D(-100,10,-100), new Point3D(-100,1,-100), new Vector3D(0,0,-1));
+		scoreCam.look(new Point3D(0,40,0), new Point3D(0,1,0), new Vector3D(0,0,-1));
 		scoreCam.setShaderMatrices();
 
-		int x = -150;
-		int z = -110;
+		int x = 10;
+		int z = -10;
+		float scorebarLength = 150f;
+		float scorebarHeight = 5f;
+		float scoreSlotLength = scorebarLength/TOKEN_NUMBER;
+
+		// Drawing empty scorebar
+		Gdx.gl.glUniform4f(colorLoc, 1f, 1f, 1f, 0.5f);
+		ModelMatrix.main.loadIdentityMatrix();
+		ModelMatrix.main.pushMatrix();
+		ModelMatrix.main.addScale(scorebarLength, 0.4f, scorebarHeight);
+		ModelMatrix.main.addTranslationBaseCoords(x,1f,z);
+		ModelMatrix.main.setShaderMatrix();
+		BoxGraphic.drawSolidCube();
+		ModelMatrix.main.popMatrix();
+
+		// Drawing score on the scorebar
 		for(int i = 0; i < score; i++) {
 			Gdx.gl.glUniform4f(colorLoc, 1f, 1f, 0f, 1f);
 			ModelMatrix.main.loadIdentityMatrix();
 			ModelMatrix.main.pushMatrix();
-			ModelMatrix.main.addScale(5f, 0.4f, 5f);
-			ModelMatrix.main.addTranslationBaseCoords(x,1f,z);
+			ModelMatrix.main.addScale(scoreSlotLength, 0.5f, scorebarHeight);
+			ModelMatrix.main.addTranslationBaseCoords(x-(scorebarLength/2),1f,z);
 			ModelMatrix.main.setShaderMatrix();
-			SphereGraphic.drawSolidSphere();
+			BoxGraphic.drawSolidCube();
 			ModelMatrix.main.popMatrix();
-			x += 20;
+			x += scoreSlotLength;
 		}
 	}
 
@@ -327,53 +349,23 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 	}
 
 
-	@Override
-	public boolean keyDown(int keycode) {
-		// TODO Auto-generated method stub
-		return false;
+	private void levelUp() {
+		level++;
+		mazeSize++;
+		score = 0;
+		initializeTokens();
+		// Generate maze
+		// Set player to initial position
 	}
 
-	@Override
-	public boolean keyUp(int keycode) {
-		// TODO Auto-generated method stub
-		return false;
+	private void initializeTokens() {
+		tokens = new ArrayList<Token>();
+		// Initialize game tokens
+		for(int i = 0; i < TOKEN_NUMBER; i++) {
+			float x = ((rand.nextInt(mazeSize) * cellSize) + (cellSize/2));
+			float y = ((rand.nextInt(mazeSize) * cellSize) + (cellSize/2));
+
+			tokens.add(new Token(x, y, ModelMatrix.main, colorLoc));
+		}
 	}
-
-	@Override
-	public boolean keyTyped(char character) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean scrolled(int amount) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
 }

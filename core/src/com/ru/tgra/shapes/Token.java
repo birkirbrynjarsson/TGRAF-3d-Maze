@@ -19,8 +19,8 @@ public class Token {
     private Random rand;
 
     // Constants
-    private final float MAX_HEIGHT = 4f;
-    private final float MIN_HEIGHT = 3f;
+    private final float MAX_HEIGHT = 2.5f;
+    private final float MIN_HEIGHT = 1.5f;
 
 
     public Token(float x, float y, ModelMatrix mm, int colorLoc){
@@ -28,9 +28,11 @@ public class Token {
         this.z = y;
         this.mm = mm;
         this.colorLoc = colorLoc;
-        this.y = MIN_HEIGHT;
+        rand = new Random();
+
+        this.y = rand.nextFloat() + MIN_HEIGHT;
         speed = 1;
-        size = 1.5f;
+        size = 0.5f;
     }
 
     public void display() {
