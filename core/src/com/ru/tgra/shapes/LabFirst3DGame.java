@@ -159,11 +159,23 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		Gdx.input.setCursorCatched(true);
 
 		if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-			cam.yaw(-90.f * deltaTime);
+			cam.roll(-90.f * deltaTime);
+//			if(playerViewMode == GOD_MODE) {
+//				cam.yaw(-90.f * deltaTime);
+//			}
+//			else {
+//				cam.yawMaze(-90.f * deltaTime);
+//			}
 			playerDirection -= 90f * deltaTime;
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-			cam.yaw(90.f * deltaTime);
+			cam.roll(90.f * deltaTime);
+//			if(playerViewMode == GOD_MODE) {
+//				cam.yaw(90.f * deltaTime);
+//			}
+//			else {
+//				cam.yawMaze(90.f * deltaTime);
+//			}
 			playerDirection += 90f * deltaTime;
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
@@ -405,7 +417,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 
 	private void levelUp() {
 		level++;
-		mazeSize++;
+		//mazeSize++;
 		score = 0;
 		initializeTokens();
 		// Generate maze
@@ -421,10 +433,10 @@ public class LabFirst3DGame extends ApplicationAdapter {
 			float x;
 			float y;
 			while(true) {
-				x = ((rand.nextInt(mazeSize) * cellSize) + (cellSize / 2));
-				y = ((rand.nextInt(mazeSize) * cellSize) + (cellSize / 2));
+				x = ((rand.nextInt(mazeSize-1) * cellSize) + (cellSize / 2));
+				y = ((rand.nextInt(mazeSize-1) * cellSize) + (cellSize / 2));
 
-				if(!doublePosition(x, y) && !(x == 0 && y == 0)) {
+				if(!doublePosition(x, y) && !(x == (cellSize / 2) && y == (cellSize / 2))) {
 					tokenPositions.add(new Point3D(x, y, 0));
 					break;
 				}
