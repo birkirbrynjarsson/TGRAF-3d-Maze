@@ -4,10 +4,8 @@ package com.ru.tgra.shapes;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 
-import java.awt.*;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.Random;
@@ -15,8 +13,6 @@ import java.util.Random;
 import com.badlogic.gdx.utils.BufferUtils;
 
 public class LabFirst3DGame extends ApplicationAdapter {
-
-	private FloatBuffer matrixBuffer;
 
 	private int renderingProgramID;
 	private int vertexShaderID;
@@ -30,8 +26,9 @@ public class LabFirst3DGame extends ApplicationAdapter {
 	private int projectionMatrixLoc;
 
 	// Player variables
-	private boolean firstPerson;
-	private boolean thirdPerson;
+	private final int GOD_MODE = 0;
+	private final int FIRST_PERSON = 1;
+ 	private int playerViewMode;
 	private float playerDirection;
 	private int score;
 
@@ -136,8 +133,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		// ----------------------------------
 		// 		  Game play settings
 		// ----------------------------------
-		firstPerson = true;
-		thirdPerson = false;
+		playerViewMode = FIRST_PERSON;
 		playerDirection = 0f;
 		score = 0;
 		level = 1;
@@ -155,7 +151,6 @@ public class LabFirst3DGame extends ApplicationAdapter {
 
 			tokens.add(new Token(x, y, ModelMatrix.main, colorLoc));
 		}
-
 	}
 
 
@@ -174,32 +169,78 @@ public class LabFirst3DGame extends ApplicationAdapter {
 			playerDirection += 90f * deltaTime;
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
-//			cam.slide(-movementSpeed * deltaTime, 0, 0);
-			cam.slideMaze(-movementSpeed * deltaTime, 0, 0, maze, playerSize);
+			if(playerViewMode == GOD_MODE) {
+				cam.slide(-movementSpeed * deltaTime, 0, 0);
+			}
+			else {
+				cam.slideMaze(-movementSpeed * deltaTime, 0, 0, maze, playerSize);
+			}
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.D)) {
-//			cam.slide(movementSpeed * deltaTime, 0, 0);
-			cam.slideMaze(movementSpeed * deltaTime, 0, 0, maze, playerSize);
+			if(playerViewMode == GOD_MODE) {
+				cam.slide(movementSpeed * deltaTime, 0, 0);
+			}
+			else {
+				cam.slideMaze(movementSpeed * deltaTime, 0, 0, maze, playerSize);
+			}
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.W)) {
-			// Moving straight forward
-//			Vector3D forwardVector = new Vector3D(-cam.n.x * (movementSpeed * deltaTime), -cam.n.y * (movementSpeed * deltaTime), -cam.n.z * (movementSpeed * deltaTime));
-//			Vector3D newForward = maze.correctedToWalls(cam.eye, forwardVector, playerSize);
-
-//			System.out.println("N Vector, x: " + forwardVector.x + ", y: " + forwardVector.y + ", z: " + forwardVector.z);
-
-//			cam.slide(0, 0, -movementSpeed * deltaTime);
-			cam.slideMaze(0, 0, -movementSpeed * deltaTime, maze, playerSize);
+			if(playerViewMode == GOD_MODE) {
+				cam.slide(0, 0, -movementSpeed * deltaTime);
+			}
+			else {
+				cam.slideMaze(0, 0, -movementSpeed * deltaTime, maze, playerSize);
+			}
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.S)) {
-//			cam.slide(0, 0, movementSpeed * deltaTime);
-			cam.slideMaze(0, 0, movementSpeed * deltaTime, maze, playerSize);
+			if(playerViewMode == GOD_MODE){
+				cam.slide(0, 0, movementSpeed * deltaTime);
+			}
+			else if(playerViewMode == FIRST_PERSON) {
+				cam.slideMaze(0, 0, movementSpeed * deltaTime, maze, playerSize);
+			}
 		}
-		if(Gdx.input.isKeyPressed(Input.Keys.R)) {
-			cam.slide(0, -movementSpeed * deltaTime, 0);
+		if(playerViewMode == GOD_MODE)
+		{
+			if(Gdx.input.isKeyPressed(Input.Keys.R)) {
+				cam.slide(0, -movementSpeed * deltaTime, 0);
+			}
+			if(Gdx.input.isKeyPressed(Input.Keys.F)) {
+				cam.slide(0, movementSpeed * deltaTime, 0);
+			}
+			if(Gdx.input.isKeyPressed(Input.Keys.Q)) {
+				cam.roll(-90.f * deltaTime);
+			}
+			if(Gdx.input.isKeyPressed(Input.Keys.E)) {
+				cam.roll(90.f * deltaTime);
+			}
+			if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
+				cam.pitch(-90.f * deltaTime);
+			}
+			if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+				cam.pitch(90.f * deltaTime);
+			}
 		}
-		if(Gdx.input.isKeyPressed(Input.Keys.F)) {
-			cam.slide(0, movementSpeed * deltaTime, 0);
+
+		if(Gdx.input.isKeyJustPressed(Input.Keys.V)) {
+			if(playerViewMode == GOD_MODE) {
+				playerViewMode = FIRST_PERSON;
+				cam.perspectiveProjection(fov, 1.0f, 0.4f, 100.0f);
+				cam.look(new Point3D((cellSize/2), 3f, (cellSize/2)), new Point3D(6,3,(cellSize/2)), new Vector3D(0,1,0));
+			}
+			else {
+				playerViewMode = GOD_MODE;
+			}
+		}
+
+		if(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
+			float acceleration = 1.1f;
+			if(movementSpeed <= 8f)
+				movementSpeed *= acceleration;
+		}
+		else
+		{
+			movementSpeed = 3f;
 		}
 
 		maze.isWalls(cam.eye);
@@ -235,14 +276,9 @@ public class LabFirst3DGame extends ApplicationAdapter {
 			// --- The player view ---
 			if(viewNum == 0)
 			{
-				if(firstPerson) {
-					Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-					cam.perspectiveProjection(fov, 1.4f, 0.1f, 100.0f);
-					cam.setShaderMatrices();
-				}
-				else if(thirdPerson) {
-
-				}
+				Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+				cam.perspectiveProjection(fov, 1.4f, 0.1f, 100.0f);
+				cam.setShaderMatrices();
 			}
 			// -- The minimap view --
 			else
