@@ -121,7 +121,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		// ----------------------------------
 		// --- Player camera ---
 		cam = new Camera(viewMatrixLoc, projectionMatrixLoc);
-		cam.perspectiveProjection(fov, 1.0f, 0.4f, 100.0f);
+		cam.perspectiveProjection(fov, (float)Gdx.graphics.getWidth()/(float)Gdx.graphics.getHeight(), 0.4f, 100.0f);
 		cam.look(new Point3D((cellSize/2), 3f, (cellSize/2)), new Point3D(6,3,(cellSize/2)), new Vector3D(0,1,0));
 		// --- Mini map camera ---
 		orthoCam = new Camera(viewMatrixLoc, projectionMatrixLoc);
@@ -277,7 +277,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 			if(viewNum == 0)
 			{
 				Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-				cam.perspectiveProjection(fov, 1.4f, 0.1f, 100.0f);
+				cam.perspectiveProjection(fov, (float)Gdx.graphics.getWidth()/(float)Gdx.graphics.getHeight(), 0.1f, 100.0f);
 				cam.setShaderMatrices();
 			}
 			// -- The minimap view --

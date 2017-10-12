@@ -166,7 +166,7 @@ public class Camera {
         this.left = -right;
         this.near = near;
         this.far = far;
-
+        System.out.println("Top: " + top + ", Right: " + right + "\nFOV: " + fov + ", Ratio: " + ratio);
         this.orthographic = false;
     }
 
