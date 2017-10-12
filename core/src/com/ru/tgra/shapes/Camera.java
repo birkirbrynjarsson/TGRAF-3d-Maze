@@ -144,6 +144,17 @@ public class Camera {
         n.set(t.x * s  + n.x * c, t.y * s + n.y * c, t.z * s + n.z * c);
     }
 
+    public void yawMaze(float angle)
+    {
+        float radians = angle * (float)Math.PI / 180.0f;
+        float c = (float)Math.cos(radians);
+        float s = -(float)Math.sin(radians);
+        Vector3D t = new Vector3D(u.x, u.y, u.z);
+
+        u.set(u.x * c  - n.x * s, u.y, u.z * c - n.z * s);
+        n.set(u.x * s  + n.x * c, n.y, u.z * s + n.z * c);
+    }
+
     public void pitch(float angle)
     {
         float radians = angle * (float)Math.PI / 180.0f;
@@ -227,4 +238,6 @@ public class Camera {
         else
             return false;
     }
+
+
 }
