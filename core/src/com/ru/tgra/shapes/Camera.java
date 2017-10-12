@@ -166,9 +166,6 @@ public class Camera {
             n.set(t.x * c  - v.x * s, t.y * c - v.y * s, t.z * c - v.z * s);
             v.set(t.x * s  + v.x * c, t.y * s + v.y * c, t.z * s + v.z * c);
         }
-
-        System.out.println("!!!!!!Y:" + n.y);
-        System.out.println("!!!!!!angle:" + angle);
     }
 
     public void orthographicProjection(float left, float right, float bottom, float top, float near, float far) {

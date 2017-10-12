@@ -367,7 +367,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		int z = -10;
 		float scorebarLength = 150f;
 		float scorebarHeight = 5f;
-		float scoreSlotLength = scorebarLength/ tokenNumber;
+		float scoreSlotLength = (float)scorebarLength/(float)tokenNumber;
 
 		// Drawing empty scorebar
 		Gdx.gl.glUniform4f(colorLoc, 1f, 1f, 1f, 0.5f);
