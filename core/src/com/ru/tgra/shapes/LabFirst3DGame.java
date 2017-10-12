@@ -6,11 +6,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 
-import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.Random;
-
-import com.badlogic.gdx.utils.BufferUtils;
 
 public class LabFirst3DGame extends ApplicationAdapter {
 
@@ -46,7 +43,8 @@ public class LabFirst3DGame extends ApplicationAdapter {
 
 	// Token variables
 	private ArrayList<Token> tokens;
-	private int TOKEN_NUMBER = 12;
+	ArrayList<Point3D> tokenPositions;
+	private int tokenNumber;
 	private Random rand;
 
 	private int colorLoc;
@@ -118,6 +116,8 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		cellSize = 6f;
 		maze = new Maze(mazeSize, mazeSize, cellSize, ModelMatrix.main, colorLoc, positionLoc, normalLoc);
 
+		tokenNumber = (mazeSize*mazeSize) / 2;
+
 		// ----------------------------------
 		// 		Camera init & settings
 		// ----------------------------------
@@ -144,15 +144,9 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		// 		  Token settings
 		// ----------------------------------
 		rand = new Random();
-
+		tokenPositions = new ArrayList<Point3D>();
 		tokens = new ArrayList<Token>();
-		// Initialize game tokens
-		for(int i = 0; i < TOKEN_NUMBER; i++) {
-			float x = ((rand.nextInt(mazeSize) * cellSize) + (cellSize/2));
-			float y = ((rand.nextInt(mazeSize) * cellSize) + (cellSize/2));
-
-			tokens.add(new Token(x, y, ModelMatrix.main, colorLoc));
-		}
+		initializeTokens();
 	}
 
 
@@ -226,9 +220,6 @@ public class LabFirst3DGame extends ApplicationAdapter {
 			}
 		}
 
-		cam.roll(-Gdx.input.getDeltaX() * deltaTime * mouseSpeed);
-		cam.pitch(-Gdx.input.getDeltaY() * deltaTime * mouseSpeed);
-
 		if(Gdx.input.isKeyJustPressed(Input.Keys.V)) {
 			if(playerViewMode == GOD_MODE) {
 				playerViewMode = FIRST_PERSON;
@@ -250,8 +241,6 @@ public class LabFirst3DGame extends ApplicationAdapter {
 			movementSpeed = 3f;
 		}
 
-//		maze.isWalls(cam.eye);
-
 		// --- Token updates ---
 		Token removedToken = null;
 
@@ -267,9 +256,14 @@ public class LabFirst3DGame extends ApplicationAdapter {
 			tokens.remove(removedToken);
 
 		// --- Level updates ---
-		if(score == TOKEN_NUMBER) {
+		if(score == tokenNumber) {
 			levelUp();
 		}
+
+		// --- Mouse movement ---
+
+		cam.roll(-Gdx.input.getDeltaX() * deltaTime * mouseSpeed);
+		cam.pitch(-Gdx.input.getDeltaY() * deltaTime * mouseSpeed);
 
 	}
 
@@ -373,7 +367,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		int z = -10;
 		float scorebarLength = 150f;
 		float scorebarHeight = 5f;
-		float scoreSlotLength = scorebarLength/TOKEN_NUMBER;
+		float scoreSlotLength = scorebarLength/ tokenNumber;
 
 		// Drawing empty scorebar
 		Gdx.gl.glUniform4f(colorLoc, 1f, 1f, 1f, 0.5f);
@@ -419,13 +413,33 @@ public class LabFirst3DGame extends ApplicationAdapter {
 	}
 
 	private void initializeTokens() {
-		tokens = new ArrayList<Token>();
+		tokens.clear();
+		tokenPositions.clear();
+
 		// Initialize game tokens
-		for(int i = 0; i < TOKEN_NUMBER; i++) {
-			float x = ((rand.nextInt(mazeSize) * cellSize) + (cellSize/2));
-			float y = ((rand.nextInt(mazeSize) * cellSize) + (cellSize/2));
+		for(int i = 0; i < tokenNumber; i++) {
+			float x;
+			float y;
+			while(true) {
+				x = ((rand.nextInt(mazeSize) * cellSize) + (cellSize / 2));
+				y = ((rand.nextInt(mazeSize) * cellSize) + (cellSize / 2));
+
+				if(!doublePosition(x, y) && !(x == 0 && y == 0)) {
+					tokenPositions.add(new Point3D(x, y, 0));
+					break;
+				}
+			}
 
 			tokens.add(new Token(x, y, ModelMatrix.main, colorLoc));
 		}
+	}
+
+	private boolean doublePosition(float x, float y){
+		for(Point3D position : tokenPositions) {
+			if(position.x == x && position.y == y) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

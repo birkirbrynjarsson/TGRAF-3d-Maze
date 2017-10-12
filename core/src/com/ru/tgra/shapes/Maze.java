@@ -217,32 +217,6 @@ public class Maze
         mm.popMatrix();
     }
 
-    public void isWalls(Point3D point){
-        float xPoint = point.x/cellSize;
-        float zPoint = point.z/cellSize;
-        if((System.nanoTime() - time) > 2000000000l){
-            String ourPosition = "x: " + point.x + " y: " + point.y + " z: " + point.z;
-            System.out.println(ourPosition);
-            System.out.println("xPoint = " + xPoint + ", zPoint = " + zPoint);
-            System.out.println("INT, X: " + (int)xPoint + ", Z: " + (int)zPoint);
-            // Use X point in 2nd array
-            System.out.println("CELL: " + maze[(int)zPoint][(int)xPoint]);
-            if((maze[(int)zPoint][(int)xPoint] & 8) == 0){
-                System.out.println("Wall North");
-            }
-            if((maze[(int)zPoint][(int)xPoint] & 4) == 0){
-                System.out.println("Wall South");
-            }
-            if((maze[(int)zPoint][(int)xPoint] & 2) == 0){
-                System.out.println("Wall East");
-            }
-            if((maze[(int)zPoint][(int)xPoint] & 1) == 0){
-                System.out.println("Wall West");
-            }
-            time = System.nanoTime();
-        }
-    }
-
     public float cellLimitNorth(float z){
         float zPoint = z/cellSize;
         return (float)(int)zPoint * cellSize + width/2;
