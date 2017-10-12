@@ -159,23 +159,11 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		Gdx.input.setCursorCatched(true);
 
 		if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-			cam.roll(-90.f * deltaTime);
-//			if(playerViewMode == GOD_MODE) {
-//				cam.yaw(-90.f * deltaTime);
-//			}
-//			else {
-//				cam.yawMaze(-90.f * deltaTime);
-//			}
+			cam.roll(90.f * deltaTime);
 			playerDirection -= 90f * deltaTime;
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-			cam.roll(90.f * deltaTime);
-//			if(playerViewMode == GOD_MODE) {
-//				cam.yaw(90.f * deltaTime);
-//			}
-//			else {
-//				cam.yawMaze(90.f * deltaTime);
-//			}
+			cam.roll(-90.f * deltaTime);
 			playerDirection += 90f * deltaTime;
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.A)) {

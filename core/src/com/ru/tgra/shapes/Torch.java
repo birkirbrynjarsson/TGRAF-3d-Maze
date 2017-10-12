@@ -3,11 +3,6 @@ import com.badlogic.gdx.Gdx;
 
 public class Torch {
 
-    // Public variables
-    public final float x;
-    public final float z;
-    public final float y;
-
     // Private variables
     private  ModelMatrix mm;
     private int colorLoc;
@@ -15,16 +10,14 @@ public class Torch {
     private final int HORIZONTAL = 0;
     private final int VERTICAL = 1;
 
-    Torch(float x, float y, float z, ModelMatrix mm, int colorLoc) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+    Torch(ModelMatrix mm, int colorLoc) {
+
         this.mm = mm;
         this.colorLoc = colorLoc;
         this.size = 0.3f;
     }
 
-    public void display(int side) {
+    public void display(int side, float x, float y, float z) {
         Gdx.gl.glUniform4f(colorLoc, 1, 1, 1, 1f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
