@@ -41,6 +41,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 	private Camera cam;
 	private Camera orthoCam;
 	private Camera scoreCam;
+	private float orthoZoom = 20f;
 	float angle;
 
 	// Token variables
@@ -113,7 +114,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 
 
 		// Birkir and his amazing maze
-		mazeSize = 12;
+		mazeSize = 7;
 		cellSize = 6f;
 		maze = new Maze(mazeSize, mazeSize, cellSize, ModelMatrix.main, colorLoc, positionLoc, normalLoc);
 
@@ -126,7 +127,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		cam.look(new Point3D((cellSize/2), 3f, (cellSize/2)), new Point3D(6,3,(cellSize/2)), new Vector3D(0,1,0));
 		// --- Mini map camera ---
 		orthoCam = new Camera(viewMatrixLoc, projectionMatrixLoc);
-		orthoCam.orthographicProjection(-30.0f,30.0f,-30.0f,30.0f,1.0f, 100.0f);
+		orthoCam.orthographicProjection(-orthoZoom,orthoZoom,-orthoZoom,orthoZoom,1.0f, 100.0f);
 		// --- Score camera ---
 		scoreCam = new Camera(viewMatrixLoc, projectionMatrixLoc);
 		scoreCam.orthographicProjection(-83.3f,83.3f,-25.0f,25.0f,1.0f, 100.0f);
@@ -292,7 +293,24 @@ public class LabFirst3DGame extends ApplicationAdapter {
 				int miniMapHeight = 250;
 				int miniMapWidth = 250;
 				Gdx.gl.glViewport((Gdx.graphics.getWidth() - miniMapWidth), Gdx.graphics.getHeight() - miniMapHeight, miniMapWidth, miniMapHeight);
-				orthoCam.look(new Point3D(cam.eye.x, 10.0f, cam.eye.z), cam.eye, new Vector3D(0,0,-1));
+				Point3D camTrace = new Point3D(cam.eye.x, cam.eye.y, cam.eye.z);
+				if(orthoZoom * 2 > mazeSize * cellSize){
+					camTrace.x = mazeSize * cellSize/2;
+					camTrace.z = mazeSize * cellSize/2;
+				} else{
+					if(camTrace.x < orthoZoom){
+						camTrace.x = orthoZoom - cellSize/4;
+					} else if(camTrace.x > (mazeSize * cellSize) - orthoZoom){
+						camTrace.x = (mazeSize * cellSize) - orthoZoom + cellSize/4;
+					}
+					if(camTrace.z < orthoZoom){
+						camTrace.z = orthoZoom - cellSize/4;
+					} else if((camTrace.z > (mazeSize * cellSize) - orthoZoom)) {
+						camTrace.z = (mazeSize * cellSize) - orthoZoom + cellSize/4;
+					}
+				}
+				orthoCam.look(new Point3D(camTrace.x, 10.0f, camTrace.z), camTrace, new Vector3D(0,0,-1));
+//				orthoCam.look(new Point3D(cam.eye.x, 10.0f, cam.eye.z), cam.eye, new Vector3D(0,0,-1));
 				orthoCam.setShaderMatrices();
 			}
 
