@@ -28,7 +28,7 @@ public class Maze
         this.mm = mm;
         this.colorLoc = colorLoc;
         this.width = cellSize/5;
-        this.height = cellSize*2;
+        this.height = 10f;
         generateMaze(0, 0);
         this.positionLoc = positionLoc;
         this.normalLoc = normalLoc;
@@ -49,7 +49,7 @@ public class Maze
                 //System.out.print((maze[j][i] & 1) == 0 ? "+---" : "+   ");
                 if((maze[j][i] & 1) == 0 ) {
                     displayPillar(i, j);
-                    displayHorWall(i, j, false);
+                    displayVerWall(i, j, false);
                 }
                 else {
                     displayPillar(i, j);
@@ -61,23 +61,21 @@ public class Maze
             for (j = 0; j < x; j++) {
                 //System.out.print((maze[j][i] & 8) == 0 ? "|   " : "    ");
                 if((maze[j][i] & 8) == 0){
-                    displayVerWall(i, j, false);
+                    displayHorWall(i, j, false);
                 }
                 else {
                     displayPillar(i, j);
                 }
                 // Nothing
             }
-            displayVerWall(i, j, false);
-            //System.out.println("|");
+            displayHorWall(i, j, false);
         }
         // draw the bottom line
         for (j = 0; j < x; j++) {
-            displayHorWall(i, j, false);
-            //System.out.print("+---");
+            displayPillar(i, j);
+            displayVerWall(i, j, false);
         }
         displayPillar(i, j);
-        //System.out.println("+");
     }
 
     public void display2D() {
@@ -165,7 +163,7 @@ public class Maze
         mm.popMatrix();
     }
 
-    private void displayVerWall(int i, int j, boolean extraLength){
+    private void displayHorWall(int i, int j, boolean extraLength){
 //        Gdx.gl.glUniform4f(colorLoc, 0.6f,0.0f,0.6f, 1.0f);
         Gdx.gl.glUniform4f(colorLoc, 1f,1f,1f, 1.0f);
         mm.loadIdentityMatrix();
@@ -181,7 +179,7 @@ public class Maze
         mm.popMatrix();
     }
 
-    private void displayHorWall(int i, int j, boolean extraLength){
+    private void displayVerWall(int i, int j, boolean extraLength){
         Gdx.gl.glUniform4f(colorLoc, 1f,1f,1f, 1.0f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
@@ -196,11 +194,23 @@ public class Maze
         mm.popMatrix();
     }
 
+    private void displayHorWall(int startI, int endI, int j){
+        Gdx.gl.glUniform4f(colorLoc, 1f,1f,1f, 1.0f);
+        mm.loadIdentityMatrix();
+        mm.pushMatrix();
+        mm.addScale(cellSize*(endI - startI), height, width);
+        float translationX = (float)(startI + endI) / 2;
+        mm.addTranslationBaseCoords(translationX*cellSize, 0, (float)j*cellSize);
+        mm.setShaderMatrix();
+        BoxGraphic.drawSolidCube();
+        mm.popMatrix();
+    }
+
     private void displayPillar(int i, int j){
         Gdx.gl.glUniform4f(colorLoc, 1f,1f,1f, 1.0f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
-        mm.addScale(width, height, width);
+        mm.addScale(width+width/3, height, width+width/3);
         mm.addTranslationBaseCoords((float)i*cellSize, 0, (float)j*cellSize);
         mm.setShaderMatrix();
         BoxGraphic.drawSolidCube();

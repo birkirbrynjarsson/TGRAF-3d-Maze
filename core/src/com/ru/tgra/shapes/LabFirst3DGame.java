@@ -53,6 +53,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 
 	private Maze maze;
 	private float movementSpeed = 3f; // used with deltatime, WASD keys
+	private float mouseSpeed = 10f;
 	private float playerSize = 1f; // Radius of player circle, for collision and display in 2D
 
 	@Override
@@ -224,8 +225,8 @@ public class LabFirst3DGame extends ApplicationAdapter {
 			}
 		}
 
-		cam.roll(-Gdx.input.getDeltaX()* deltaTime);
-		cam.pitch(-Gdx.input.getDeltaY()* deltaTime);
+		cam.roll(-Gdx.input.getDeltaX() * deltaTime * mouseSpeed);
+		cam.pitch(-Gdx.input.getDeltaY() * deltaTime * mouseSpeed);
 
 		if(Gdx.input.isKeyJustPressed(Input.Keys.V)) {
 			if(playerViewMode == GOD_MODE) {
