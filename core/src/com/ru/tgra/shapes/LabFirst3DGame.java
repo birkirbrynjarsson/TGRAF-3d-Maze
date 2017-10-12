@@ -112,7 +112,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 
 
 		// Birkir and his amazing maze
-		mazeSize = 7;
+		mazeSize = 8;
 		cellSize = 6f;
 		maze = new Maze(mazeSize, mazeSize, cellSize, ModelMatrix.main, colorLoc, positionLoc, normalLoc);
 

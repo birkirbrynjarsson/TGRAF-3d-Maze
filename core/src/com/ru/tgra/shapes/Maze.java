@@ -20,6 +20,7 @@ public class Maze
     private int normalLoc;
     private long time;
     MazeBrickWall brickWall;
+    MazeWoodWall woodWall;
 
     public Maze(int x, int y, float cellSize, ModelMatrix mm, int colorLoc, int positionLoc, int normalLoc) {
         this.x = x;
@@ -35,11 +36,13 @@ public class Maze
         this.normalLoc = normalLoc;
         time = System.nanoTime();
         brickWall = new MazeBrickWall(cellSize, width, height, mm, colorLoc, positionLoc, normalLoc);
+        woodWall = new MazeWoodWall(cellSize, width, height, mm, colorLoc, positionLoc, normalLoc);
     }
 
     public void display(boolean roofOn) {
 
         displayFloor();
+        boolean playerView = roofOn;
         if(roofOn){
             displayRoof();
         }
@@ -50,7 +53,7 @@ public class Maze
                 //System.out.print((maze[j][i] & 1) == 0 ? "+---" : "+   ");
                 if((maze[j][i] & 1) == 0 ) {
                     displayPillar(i, j);
-                    displayVerWall(i, j, roofOn);
+                    displayVerWall(i, j, playerView);
                 }
                 else {
                     displayPillar(i, j);
@@ -62,19 +65,19 @@ public class Maze
             for (j = 0; j < x; j++) {
                 //System.out.print((maze[j][i] & 8) == 0 ? "|   " : "    ");
                 if((maze[j][i] & 8) == 0){
-                    displayHorWall(i, j);
+                    displayHorWall(i, j, playerView);
                 }
                 else {
                     displayPillar(i, j);
                 }
                 // Nothing
             }
-            displayHorWall(i, j);
+            displayHorWall(i, j, playerView);
         }
         // draw the bottom line
         for (j = 0; j < x; j++) {
             displayPillar(i, j);
-            displayVerWall(i, j, roofOn);
+            displayVerWall(i, j, playerView);
         }
         displayPillar(i, j);
     }
@@ -143,11 +146,12 @@ public class Maze
     }
 
     private void displayFloor(){
+        float floorThickness = 0.1f;
         Gdx.gl.glUniform4f(colorLoc, 1f, 1f, 1f, 1f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
         mm.addScale(x * cellSize, 0.1f, y * cellSize);
-        mm.addTranslationBaseCoords((x * cellSize)/2,0f,(y * cellSize)/2);
+        mm.addTranslationBaseCoords((x * cellSize)/2,-floorThickness/2,(y * cellSize)/2);
         mm.setShaderMatrix();
         BoxGraphic.drawSolidCube();
         mm.popMatrix();
@@ -164,19 +168,23 @@ public class Maze
         mm.popMatrix();
     }
 
-    private void displayHorWall(int i, int j){
-        Gdx.gl.glUniform4f(colorLoc, 1f,1f,1f, 1.0f);
-        mm.loadIdentityMatrix();
-        mm.pushMatrix();
-        mm.addScale(cellSize, height, width);
-        mm.addTranslationBaseCoords((float)i*cellSize+(cellSize/2), height/2, (float)j*cellSize);
-        mm.setShaderMatrix();
-        BoxGraphic.drawSolidCube();
-        mm.popMatrix();
+    private void displayHorWall(int i, int j, boolean playerView){
+        if(playerView){
+            woodWall.displayHorWall(i, j);
+        } else {
+            Gdx.gl.glUniform4f(colorLoc, 1f, 1f, 1f, 1.0f);
+            mm.loadIdentityMatrix();
+            mm.pushMatrix();
+            mm.addScale(cellSize, height, width);
+            mm.addTranslationBaseCoords((float) i * cellSize + (cellSize / 2), height / 2, (float) j * cellSize);
+            mm.setShaderMatrix();
+            BoxGraphic.drawSolidCube();
+            mm.popMatrix();
+        }
     }
 
-    private void displayVerWall(int i, int j, boolean bricksOn){
-        if(bricksOn){
+    private void displayVerWall(int i, int j, boolean playerView){
+        if(playerView){
             brickWall.displayVerWall(i, j);
         } else {
             Gdx.gl.glUniform4f(colorLoc, 1f,1f,1f, 1.0f);
@@ -191,10 +199,10 @@ public class Maze
     }
 
     private void displayPillar(int i, int j){
-        Gdx.gl.glUniform4f(colorLoc, 1f,1f,1f, 1.0f);
+        Gdx.gl.glUniform4f(colorLoc, 0.1f,0.1f,0.1f, 0.1f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
-        mm.addScale(width+width/3, height, width+width/3);
+        mm.addScale(width+width/3, height+1f, width+width/3);
         mm.addTranslationBaseCoords((float)i*cellSize, height/2, (float)j*cellSize);
         mm.setShaderMatrix();
         BoxGraphic.drawSolidCube();
