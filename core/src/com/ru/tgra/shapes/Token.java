@@ -1,6 +1,7 @@
 package com.ru.tgra.shapes;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 
 import java.util.Random;
 
@@ -17,6 +18,7 @@ public class Token {
     private int colorLoc;
     private float speed;
     private Random rand;
+    private Color color;
 
     // Constants
     private final float MAX_HEIGHT = 2.5f;
@@ -29,6 +31,7 @@ public class Token {
         this.mm = mm;
         this.colorLoc = colorLoc;
         rand = new Random();
+        color = new Color(rand.nextFloat(),rand.nextFloat(),rand.nextFloat(),1);
 
         this.y = rand.nextFloat() + MIN_HEIGHT;
         speed = 1;
@@ -36,7 +39,7 @@ public class Token {
     }
 
     public void display() {
-        Gdx.gl.glUniform4f(colorLoc, 1f, 1f, 1f, 1f);
+        Gdx.gl.glUniform4f(colorLoc, color.r, color.g, color.b, 1f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
         mm.addScale(size, size, size);

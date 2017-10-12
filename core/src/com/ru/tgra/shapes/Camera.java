@@ -172,7 +172,6 @@ public class Camera {
         this.left = -right;
         this.near = near;
         this.far = far;
-        System.out.println("Top: " + top + ", Right: " + right + "\nFOV: " + fov + ", Ratio: " + ratio);
         this.orthographic = false;
     }
 
@@ -222,7 +221,7 @@ public class Camera {
         if(distY < 0){
             distY = -distY;
         }
-        if((distX <= (near + token.size)) && (distY <= (near + token.size))) {
+        if((distX <= (near + token.size*7)) && (distY <= (near + token.size*7))) {
             return true;
         }
         else
