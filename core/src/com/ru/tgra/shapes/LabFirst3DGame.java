@@ -250,7 +250,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 			movementSpeed = 3f;
 		}
 
-		maze.isWalls(cam.eye);
+//		maze.isWalls(cam.eye);
 
 		// --- Token updates ---
 		Token removedToken = null;

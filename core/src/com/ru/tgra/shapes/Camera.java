@@ -68,8 +68,8 @@ public class Camera {
 
         if((eye.z - eyeZ) > 0.0f) { // Moving North
             float limitNorth = maze.cellLimitNorth(eyeZ);
-            System.out.println("Moving North");
-            System.out.println("Limit North: " + limitNorth);
+//            System.out.println("Moving North");
+//            System.out.println("Limit North: " + limitNorth);
             if (eyeZ - radius > limitNorth) {
                 eye.z = eyeZ;
             } else if (maze.openNorth(eyeX, eyeZ)) {
@@ -79,8 +79,8 @@ public class Camera {
             }
         } else { // Moving South
             float limitSouth = maze.cellLimitSouth(eyeZ);
-            System.out.println("Moving South");
-            System.out.println("Limit South: " + limitSouth);
+//            System.out.println("Moving South");
+//            System.out.println("Limit South: " + limitSouth);
             if(eyeZ + radius < limitSouth){
                 eye.z = eyeZ;
             } else if(maze.openSouth(eyeX, eyeZ)){
@@ -91,8 +91,8 @@ public class Camera {
         }
         if((eye.x - eyeX) < 0.0f){ // Moving East
             float limitEast = maze.cellLimitEast(eyeX);
-            System.out.println("Moving East");
-            System.out.println("Limit East: " + limitEast);
+//            System.out.println("Moving East");
+//            System.out.println("Limit East: " + limitEast);
             if(eyeX + radius < limitEast){
                 eye.x = eyeX;
             } else if(maze.openEast(eyeX, eyeZ)){
@@ -103,8 +103,8 @@ public class Camera {
             }
         } else { // Moving West
             float limitWest = maze.cellLimitWest(eyeX);
-            System.out.println("Moving West");
-            System.out.println("Limit West: " + limitWest);
+//            System.out.println("Moving West");
+//            System.out.println("Limit West: " + limitWest);
             if(eyeX - radius > limitWest){
                 eye.x = eyeX;
             } else if(maze.openWest(eyeX, eyeZ)){
@@ -172,7 +172,6 @@ public class Camera {
         this.left = -right;
         this.near = near;
         this.far = far;
-        System.out.println("Top: " + top + ", Right: " + right + "\nFOV: " + fov + ", Ratio: " + ratio);
         this.orthographic = false;
     }
 
