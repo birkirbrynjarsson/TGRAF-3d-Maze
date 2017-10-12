@@ -28,7 +28,7 @@ public class Maze
         this.mm = mm;
         this.colorLoc = colorLoc;
         this.width = cellSize/5;
-        this.height = 10f;
+        this.height = cellSize*2;
         generateMaze(0, 0);
         this.positionLoc = positionLoc;
         this.normalLoc = normalLoc;
@@ -49,7 +49,7 @@ public class Maze
                 //System.out.print((maze[j][i] & 1) == 0 ? "+---" : "+   ");
                 if((maze[j][i] & 1) == 0 ) {
                     displayPillar(i, j);
-                    displayHorWall(i, j);
+                    displayHorWall(i, j, false);
                 }
                 else {
                     displayPillar(i, j);
@@ -61,19 +61,19 @@ public class Maze
             for (j = 0; j < x; j++) {
                 //System.out.print((maze[j][i] & 8) == 0 ? "|   " : "    ");
                 if((maze[j][i] & 8) == 0){
-                    displayVerWall(i, j);
+                    displayVerWall(i, j, false);
                 }
                 else {
                     displayPillar(i, j);
                 }
                 // Nothing
             }
-            displayVerWall(i, j);
+            displayVerWall(i, j, false);
             //System.out.println("|");
         }
         // draw the bottom line
         for (j = 0; j < x; j++) {
-            displayHorWall(i, j);
+            displayHorWall(i, j, false);
             //System.out.print("+---");
         }
         displayPillar(i, j);
@@ -165,23 +165,31 @@ public class Maze
         mm.popMatrix();
     }
 
-    private void displayVerWall(int i, int j){
+    private void displayVerWall(int i, int j, boolean extraLength){
 //        Gdx.gl.glUniform4f(colorLoc, 0.6f,0.0f,0.6f, 1.0f);
         Gdx.gl.glUniform4f(colorLoc, 1f,1f,1f, 1.0f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
-        mm.addScale(cellSize, height, width);
+        if(extraLength){
+            mm.addScale(cellSize+width, height, width);
+        } else {
+            mm.addScale(cellSize, height, width);
+        }
         mm.addTranslationBaseCoords((float)i*cellSize+(cellSize/2), 0, (float)j*cellSize);
         mm.setShaderMatrix();
         BoxGraphic.drawSolidCube();
         mm.popMatrix();
     }
 
-    private void displayHorWall(int i, int j){
+    private void displayHorWall(int i, int j, boolean extraLength){
         Gdx.gl.glUniform4f(colorLoc, 1f,1f,1f, 1.0f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
-        mm.addScale(width, height, cellSize);
+        if(extraLength){
+            mm.addScale(width, height, cellSize+width);
+        } else {
+            mm.addScale(width, height, cellSize);
+        }
         mm.addTranslationBaseCoords((float)i*cellSize, 0, (float)j*cellSize+(cellSize/2));
         mm.setShaderMatrix();
         BoxGraphic.drawSolidCube();

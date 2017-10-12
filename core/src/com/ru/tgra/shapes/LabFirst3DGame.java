@@ -47,7 +47,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 	private Random rand;
 
 	private int colorLoc;
-	private float fov = 90.0f;
+	private float fov = 50.0f;
 
 	private Maze maze;
 	private float movementSpeed = 3f; // used with deltatime, WASD keys
@@ -123,7 +123,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 		// ----------------------------------
 		// --- Player camera ---
 		cam = new Camera(viewMatrixLoc, projectionMatrixLoc);
-		cam.perspectiveProjection(fov, 1.0f, 0.4f, 100.0f);
+		cam.perspectiveProjection(fov, (float)Gdx.graphics.getWidth()/(float)Gdx.graphics.getHeight(), 0.4f, 100.0f);
 //		cam.look(new Point3D(-13f, 3f, 0f), new Point3D(0,3,0), new Vector3D(0,1,0));
 		cam.look(new Point3D((cellSize/2), 3f, (cellSize/2)), new Point3D(6,3,(cellSize/2)), new Vector3D(0,1,0));
 		// --- Mini map camera ---
@@ -173,12 +173,12 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 			playerDirection += 90f * deltaTime;
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
-//			cam.slide(-movementSpeed * deltaTime, 0, 0);
-			cam.slideMaze(-movementSpeed * deltaTime, 0, 0, maze, playerSize);
+			cam.slide(-movementSpeed * deltaTime, 0, 0);
+//			cam.slideMaze(-movementSpeed * deltaTime, 0, 0, maze, playerSize);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.D)) {
-//			cam.slide(movementSpeed * deltaTime, 0, 0);
-			cam.slideMaze(movementSpeed * deltaTime, 0, 0, maze, playerSize);
+			cam.slide(movementSpeed * deltaTime, 0, 0);
+//			cam.slideMaze(movementSpeed * deltaTime, 0, 0, maze, playerSize);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.W)) {
 			// Moving straight forward
@@ -187,12 +187,12 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 
 //			System.out.println("N Vector, x: " + forwardVector.x + ", y: " + forwardVector.y + ", z: " + forwardVector.z);
 
-//			cam.slide(0, 0, -movementSpeed * deltaTime);
-			cam.slideMaze(0, 0, -movementSpeed * deltaTime, maze, playerSize);
+			cam.slide(0, 0, -movementSpeed * deltaTime);
+//			cam.slideMaze(0, 0, -movementSpeed * deltaTime, maze, playerSize);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.S)) {
-//			cam.slide(0, 0, movementSpeed * deltaTime);
-			cam.slideMaze(0, 0, movementSpeed * deltaTime, maze, playerSize);
+			cam.slide(0, 0, movementSpeed * deltaTime);
+//			cam.slideMaze(0, 0, movementSpeed * deltaTime, maze, playerSize);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.R)) {
 			cam.slide(0, -movementSpeed * deltaTime, 0);
@@ -230,7 +230,7 @@ public class LabFirst3DGame extends ApplicationAdapter implements InputProcessor
 			{
 				if(firstPerson) {
 					Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-					cam.perspectiveProjection(fov, 1.4f, 0.1f, 100.0f);
+					cam.perspectiveProjection(fov, (float)Gdx.graphics.getWidth()/(float)Gdx.graphics.getHeight(), 0.1f, 100.0f);
 					cam.setShaderMatrices();
 				}
 				else if(thirdPerson) {
