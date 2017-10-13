@@ -87,7 +87,10 @@ Being able to look around with the mouse without affecting the movement of the p
 ### Description of the lighting model
 
 1. What's in it and why some things are included and other excluded.
-1. The entire code of our shaders and description what each line/part does.
+
+### The entire code of our shaders
+
+1. Describing what each line/part does.
   - Explain every variable and where and how it is used.
 1. Make sure to describe the relationship between vertex and fragment shaders, even if most of the work is in one of them.
 1. Get across the fact that we understand our shaders, within them and how that affects around them in OpenGL.
