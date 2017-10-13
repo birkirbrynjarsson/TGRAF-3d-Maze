@@ -8,8 +8,8 @@ import java.util.Vector;
 
 public class Maze
 {
-    private final int x;
-    private final int y;
+    private int x;
+    private int y;
     private float cellSize;
     private float width;
     private final int[][] maze;
@@ -121,6 +121,12 @@ public class Maze
 
     private static boolean between(int v, int upper) {
         return (v >= 0) && (v < upper);
+    }
+
+    public void levelUp(int mazeSize) {
+        this.x = mazeSize;
+        this.y = mazeSize;
+        generateMaze(0,0);
     }
 
     private enum DIR {

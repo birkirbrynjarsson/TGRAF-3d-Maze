@@ -117,13 +117,6 @@ public class Camera {
 
     public void roll(float angle)
     {
-//        float radians = angle * (float)Math.PI / 180.0f;
-//        float c = (float)Math.cos(radians);
-//        float s = (float)Math.sin(radians);
-//        Vector3D t = new Vector3D(u.x, u.y, u.z);
-//
-//        u.set(t.x * c  - v.x * s, t.y * c - v.y * s, t.z * c - v.z * s);
-//        v.set(t.x * s  + v.x * c, t.y * s + v.y * c, t.z * s + v.z * c);
         float radians = angle * (float)Math.PI / 180.0f;
         float c = (float)Math.cos(radians);
         float s = -(float)Math.sin(radians);
@@ -240,6 +233,4 @@ public class Camera {
         else
             return false;
     }
-
-
 }
