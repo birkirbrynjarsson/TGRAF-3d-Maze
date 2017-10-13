@@ -146,7 +146,7 @@ public class Maze
 
     private void displayFloor(){
         float floorThickness = 0.1f;
-        shader.setColor(1f, 1f, 1f, 1f);
+        shader.setMaterialDiffuse(1f, 1f, 1f, 1f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
         mm.addScale(x * cellSize, 0.1f, y * cellSize);
@@ -157,7 +157,7 @@ public class Maze
     }
 
     private void displayRoof(){
-        shader.setColor(1f, 1f, 1f, 1f);
+        shader.setMaterialDiffuse(1f, 1f, 1f, 1f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
         mm.addScale(x * cellSize, 0.1f, y * cellSize);
@@ -171,7 +171,7 @@ public class Maze
         if(playerView){
             woodWall.displayHorWall(i, j);
         } else {
-            shader.setColor(1f, 1f, 1f, 1.0f);
+            shader.setMaterialDiffuse(1f, 1f, 1f, 1.0f);
             mm.loadIdentityMatrix();
             mm.pushMatrix();
             mm.addScale(cellSize, height, width);
@@ -186,7 +186,7 @@ public class Maze
         if(playerView){
             brickWall.displayVerWall(i, j);
         } else {
-            shader.setColor(1f,1f,1f, 1.0f);
+            shader.setMaterialDiffuse(1f,1f,1f, 1.0f);
             mm.loadIdentityMatrix();
             mm.pushMatrix();
             mm.addScale(width, height, cellSize);
@@ -198,7 +198,7 @@ public class Maze
     }
 
     private void displayPillar(int i, int j){
-        shader.setColor(0.1f,0.1f,0.1f, 0.1f);
+        shader.setMaterialDiffuse(0.1f,0.1f,0.1f, 0.1f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
         mm.addScale(width+width/3, height+1f, width+width/3);

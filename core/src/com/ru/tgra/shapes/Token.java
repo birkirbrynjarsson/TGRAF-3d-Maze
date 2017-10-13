@@ -39,7 +39,7 @@ public class Token {
     }
 
     public void display() {
-        shader.setColor(color.r, color.g, color.b, 1f);
+        shader.setMaterialDiffuse(color.r, color.g, color.b, 1f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
         mm.addScale(size, size, size);

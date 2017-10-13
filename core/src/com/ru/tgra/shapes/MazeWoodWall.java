@@ -52,7 +52,7 @@ public class MazeWoodWall
     public void displayHorWall(int i, int j)
     {
         for (int h = 0; h < hSplit; h++) {
-            shader.setColor(colorArr[h].r, colorArr[h].g, colorArr[h].b, 1.0f);
+            shader.setMaterialDiffuse(colorArr[h].r, colorArr[h].g, colorArr[h].b, 1.0f);
             mm.loadIdentityMatrix();
             mm.pushMatrix();
             mm.addScale(cellSize, height / hSplit - fua, width + extrude[h]);

@@ -59,7 +59,7 @@ public class MazeBrickWall
     {
         for (int h = 0; h < hSplit; h++) {
             for (int v = 0; v < vSplit; v++) {
-                shader.setColor(colorArr[h][v].r, colorArr[h][v].g, colorArr[h][v].b, 1.0f);
+                shader.setMaterialDiffuse(colorArr[h][v].r, colorArr[h][v].g, colorArr[h][v].b, 1.0f);
                 mm.loadIdentityMatrix();
                 mm.pushMatrix();
                 if (h % 2 == 0) {
@@ -74,7 +74,7 @@ public class MazeBrickWall
                 mm.popMatrix();
             }
         }
-        shader.setColor(1f, 1f, 1f, 1.0f);
+        shader.setMaterialDiffuse(1f, 1f, 1f, 1.0f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
         mm.addScale(width, height, cellSize);

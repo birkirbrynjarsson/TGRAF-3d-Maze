@@ -69,7 +69,7 @@ public class SnowMan
         rEyeLook.normalize();
 
         // Bottom ball
-        shader.setColor(1f, 1f, 1f, 1f);
+        shader.setMaterialDiffuse(1f, 1f, 1f, 1f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
         mm.addScale(size, size, size);
@@ -79,7 +79,7 @@ public class SnowMan
         mm.popMatrix();
 
         // 2nd Ball
-        shader.setColor(1f, 1f, 1f, 1f);
+        shader.setMaterialDiffuse(1f, 1f, 1f, 1f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
         mm.addScale(size*0.7f, size*0.7f, size*0.7f);
@@ -89,7 +89,7 @@ public class SnowMan
         mm.popMatrix();
 
         // Face ball
-        shader.setColor(1f, 1f, 1f, 1f);
+        shader.setMaterialDiffuse(1f, 1f, 1f, 1f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
         mm.addScale(size*0.5f, size*0.5f, size*0.5f);
@@ -99,7 +99,7 @@ public class SnowMan
         mm.popMatrix();
 
         // Nose
-        shader.setColor(noseColor.r, noseColor.g, noseColor.b, noseColor.a);
+        shader.setMaterialDiffuse(noseColor.r, noseColor.g, noseColor.b, noseColor.a);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
         mm.addScale(size*0.2f, size*0.2f, size*0.2f);
@@ -110,7 +110,7 @@ public class SnowMan
 
 
         // Eye Left
-        shader.setColor(0f, 0f, 0f, 0f);
+        shader.setMaterialDiffuse(0f, 0f, 0f, 0f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
         mm.addScale(size*0.1f, size*0.1f, size*0.1f);
@@ -120,7 +120,7 @@ public class SnowMan
         mm.popMatrix();
 
         // Eye Right
-        shader.setColor(0f, 0f, 0f, 0f);
+        shader.setMaterialDiffuse(0f, 0f, 0f, 0f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
         mm.addScale(size*0.1f, size*0.1f, size*0.1f);

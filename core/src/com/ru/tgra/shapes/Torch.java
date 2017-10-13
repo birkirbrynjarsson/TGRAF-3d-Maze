@@ -18,7 +18,7 @@ public class Torch {
     }
 
     public void display(int side, float x, float y, float z) {
-        shader.setColor( 1, 1, 1, 1f);
+        shader.setMaterialDiffuse( 1, 1, 1, 1f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
         mm.addScale(size, size, size);
@@ -28,7 +28,7 @@ public class Torch {
         mm.popMatrix();
 
         if(side == HORIZONTAL){
-            shader.setColor( 1, 1, 1, 1f);
+            shader.setMaterialDiffuse( 1, 1, 1, 1f);
             mm.loadIdentityMatrix();
             mm.pushMatrix();
             mm.addScale(size, 1f, size);
@@ -38,7 +38,7 @@ public class Torch {
             mm.popMatrix();
         }
         else if(side == VERTICAL) {
-            shader.setColor( 1, 1, 1, 1f);
+            shader.setMaterialDiffuse( 1, 1, 1, 1f);
             mm.loadIdentityMatrix();
             mm.pushMatrix();
             mm.addScale(size, 1f, size);

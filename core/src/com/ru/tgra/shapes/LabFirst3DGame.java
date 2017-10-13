@@ -58,7 +58,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		shader = new Shader();
 
 		//COLOR IS SET HERE
-		shader.setColor(0.7f, 0.2f, 0, 1);
+		shader.setMaterialDiffuse(0.7f, 0.2f, 0, 1);
 
 		BoxGraphic.create(shader.getVertexPointer(), shader.getNormalPointer());
 		SphereGraphic.create(shader.getVertexPointer(), shader.getNormalPointer());
@@ -262,7 +262,6 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		// Snowman collsion
 		if(cam.crashedIntoSnowman(snowMan)){
 			gamingOver = true;
-//			System.out.println("CRASHED INTO SNOWMAN FUCKS!");
 		}
 
 		// --- Mouse movement ---
@@ -288,6 +287,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 				cam.perspectiveProjection(fov, (float)Gdx.graphics.getWidth()/(float)Gdx.graphics.getHeight(), 0.1f, 100.0f);
 				shader.setViewMatrix(cam.getViewMatrix());
 				shader.setProjectionMatrix(cam.getProjectionMatrix());
+				shader.setLightPosition(cam.eye.x,5f,cam.eye.z,1f);
 			}
 			// -- The minimap view --
 			else
@@ -314,8 +314,15 @@ public class LabFirst3DGame extends ApplicationAdapter {
 				orthoCam.look(new Point3D(camTrace.x, 10.0f, camTrace.z), camTrace, new Vector3D(0,0,-1));
 				shader.setViewMatrix(orthoCam.getViewMatrix());
 				shader.setProjectionMatrix(orthoCam.getProjectionMatrix());
+				shader.setLightPosition(cam.eye.x,10f,cam.eye.z,1f);
 
 			}
+
+			// ----------------------------------
+			// 		 Lighting stuff
+			// ----------------------------------
+
+			shader.setLightDiffuse(1f,1f,1f,0.5f);
 
 
 			// ----------------------------------
@@ -334,10 +341,12 @@ public class LabFirst3DGame extends ApplicationAdapter {
 
 			snowMan.display(cam.eye);
 
+
+
 			// --- Our position in the mini map ---
 			if(viewNum == 1)
 			{
-				shader.setColor(0.6f,0.0f,0.6f, 1.0f);
+				shader.setMaterialDiffuse(0.6f,0.0f,0.6f, 1.0f);
 
 				ModelMatrix.main.loadIdentityMatrix();
 				ModelMatrix.main.pushMatrix();
@@ -348,7 +357,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 				SphereGraphic.drawSolidSphere();
 
 				// --- Background in the mini map ---
-				shader.setColor(0f, 0f, 0f, 1f);
+				shader.setMaterialDiffuse(0f, 0f, 0f, 1f);
 				ModelMatrix.main.loadIdentityMatrix();
 				ModelMatrix.main.addScale(1000f, 0.4f, 1000f);
 				ModelMatrix.main.addTranslationBaseCoords(1,0.2f,1);
@@ -375,6 +384,8 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		shader.setViewMatrix(scoreCam.getViewMatrix());
 		shader.setProjectionMatrix(scoreCam.getProjectionMatrix());
 
+		shader.setLightPosition(0,40f,10,1f);
+
 		float x = 10f;
 		int z = -10;
 		float scorebarLength = 150f;
@@ -382,7 +393,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		float scoreSlotLength = (float)scorebarLength/((float)tokenNumber);
 
 		// Drawing empty scorebar
-		shader.setColor(1f, 1f, 1f, 0.5f);
+		shader.setMaterialDiffuse(1f, 1f, 1f, 0.5f);
 		ModelMatrix.main.loadIdentityMatrix();
 		ModelMatrix.main.pushMatrix();
 		ModelMatrix.main.addScale(scorebarLength, 0.4f, scorebarHeight);
@@ -394,7 +405,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 
 		// Drawing score on the scorebar
 		for(int i = 0; i < score; i++) {
-			shader.setColor(1f, 1f, 0f, 1f);
+			shader.setMaterialDiffuse(1f, 1f, 0f, 1f);
 			ModelMatrix.main.loadIdentityMatrix();
 			ModelMatrix.main.pushMatrix();
 			ModelMatrix.main.addScale(scoreSlotLength, 0.5f, scorebarHeight);
