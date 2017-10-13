@@ -135,10 +135,10 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		cam = new Camera(viewMatrixLoc, projectionMatrixLoc);
 		cam.perspectiveProjection(fov, (float)Gdx.graphics.getWidth()/(float)Gdx.graphics.getHeight(), 0.4f, 100.0f);
 		if(maze.openEast(cellSize/2, cellSize/2)) {
-			cam.look(new Point3D((cellSize/2), 2.5f, (cellSize/2)), new Point3D(6,3,lookEast), new Vector3D(0,1,0));
+			cam.look(new Point3D((cellSize/2), 2.5f, (cellSize/2)), new Point3D(6,2.5f,lookEast), new Vector3D(0,1,0));
 		}
 		else {
-			cam.look(new Point3D((cellSize/2), 2.5f, (cellSize/2)), new Point3D(6,3,lookSouth), new Vector3D(0,1,0));
+			cam.look(new Point3D((cellSize/2), 2.5f, (cellSize/2)), new Point3D(6,2.5f,lookSouth), new Vector3D(0,1,0));
 		}
 
 		// --- Mini map camera ---
@@ -474,6 +474,8 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		else {
 			cam.look(new Point3D((cellSize/2), 2.5f, (cellSize/2)), new Point3D(6,3,lookSouth), new Vector3D(0,1,0));
 		}
+		snowMan = new SnowMan((rand.nextInt(mazeSize) * cellSize) + (cellSize / 2), (rand.nextInt(mazeSize) * cellSize) + (cellSize / 2), ModelMatrix.main, colorLoc);
+		snowMan.initDirection(maze);
 	}
 
 	private void gameOver(){
@@ -489,6 +491,8 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		else {
 			cam.look(new Point3D((cellSize/2), 2.5f, (cellSize/2)), new Point3D(6,3,lookSouth), new Vector3D(0,1,0));
 		}
+		snowMan = new SnowMan((rand.nextInt(mazeSize) * cellSize) + (cellSize / 2), (rand.nextInt(mazeSize) * cellSize) + (cellSize / 2), ModelMatrix.main, colorLoc);
+		snowMan.initDirection(maze);
 	}
 
 	private void initializeTokens() {

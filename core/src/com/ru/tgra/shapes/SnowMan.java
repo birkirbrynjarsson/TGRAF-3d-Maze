@@ -57,6 +57,20 @@ public class SnowMan
     }
     
     public void display(Point3D playerPos){
+
+        // Vectors
+        Vector3D lookDirection = Vector3D.difference(playerPos, pos);
+        u = up.cross(lookDirection);
+        u.normalize();
+        u.scale(lookDirection.length()*0.3f);
+        lookDirection.normalize();
+        Point3D leftEyeLook = new Point3D(playerPos.x + u.x, playerPos.y + u.y, playerPos.z + u.z);
+        Point3D rightEyeLook = new Point3D(playerPos.x - u.x, playerPos.y - u.y, playerPos.z - u.z);
+        Vector3D lEyeLook = Vector3D.difference(leftEyeLook, pos);
+        Vector3D rEyeLook = Vector3D.difference(rightEyeLook, pos);
+        lEyeLook.normalize();
+        rEyeLook.normalize();
+
         // Bottom ball
         Gdx.gl.glUniform4f(colorLoc, 1f, 1f, 1f, 1f);
         mm.loadIdentityMatrix();
@@ -86,8 +100,6 @@ public class SnowMan
         mm.popMatrix();
 
         // Nose
-        Vector3D lookDirection = Vector3D.difference(playerPos, pos);
-        lookDirection.normalize();
         Gdx.gl.glUniform4f(colorLoc, noseColor.r, noseColor.g, noseColor.b, noseColor.a);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
@@ -97,15 +109,6 @@ public class SnowMan
         SphereGraphic.drawSolidSphere();
         mm.popMatrix();
 
-        u = up.cross(lookDirection);
-        u.normalize();
-        u.scale(2);
-        Point3D leftEyeLook = new Point3D(playerPos.x + u.x, playerPos.y + u.y, playerPos.z + u.z);
-        Point3D rightEyeLook = new Point3D(playerPos.x - u.x, playerPos.y - u.y, playerPos.z - u.z);
-        Vector3D lEyeLook = Vector3D.difference(leftEyeLook, pos);
-        Vector3D rEyeLook = Vector3D.difference(rightEyeLook, pos);
-        lEyeLook.normalize();
-        rEyeLook.normalize();
 
         // Eye Left
         Gdx.gl.glUniform4f(colorLoc, 0f, 0f, 0f, 0f);
