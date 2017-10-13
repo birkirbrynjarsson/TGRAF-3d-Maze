@@ -53,12 +53,11 @@ public class SnowMan
         direction = i;
         destination = destination(i, maze);
         moving = true;
-        System.out.println("Direction: " + direction);
     }
     
     public void display(Point3D playerPos){
 
-        // Vectors
+        // Vectors for eye and nose direction
         Vector3D lookDirection = Vector3D.difference(playerPos, pos);
         u = up.cross(lookDirection);
         u.normalize();
@@ -80,6 +79,7 @@ public class SnowMan
         mm.setShaderMatrix();
         SphereGraphic.drawSolidSphere();
         mm.popMatrix();
+
         // 2nd Ball
         Gdx.gl.glUniform4f(colorLoc, 1f, 1f, 1f, 1f);
         mm.loadIdentityMatrix();
@@ -89,6 +89,7 @@ public class SnowMan
         mm.setShaderMatrix();
         SphereGraphic.drawSolidSphere();
         mm.popMatrix();
+
         // Face ball
         Gdx.gl.glUniform4f(colorLoc, 1f, 1f, 1f, 1f);
         mm.loadIdentityMatrix();
@@ -129,9 +130,6 @@ public class SnowMan
         mm.setShaderMatrix();
         SphereGraphic.drawSolidSphere();
         mm.popMatrix();
-
-
-
     }
 
     private boolean getOpen(int dir, Maze maze){
@@ -160,9 +158,18 @@ public class SnowMan
         return pos;
     }
 
+    public void newDirection(int illegalDirection, Maze maze){
+        int i = rand.nextInt(4);
+        while(i == illegalDirection || !getOpen(i, maze)){
+            i = (i + 1)%4;
+        }
+        direction = i;
+        moving = true;
+        destination = destination(i, maze);
+    }
+
     public void move(Maze maze, Point3D playerPos, float speed){
         if(!moving){
-            int i = 0;
             int cell = maze.getCellValue(pos.x, pos.z);
             if(direction == 0){ // North
                 // Check if closed in all directions
@@ -171,13 +178,7 @@ public class SnowMan
                     moving = true;
                     destination.z = maze.getSouthZ(pos.z);
                 } else {
-                    i = rand.nextInt(4);
-                    while(i == 1 || !getOpen(i, maze)){
-                        i = (i + 1)%4;
-                    }
-                    direction = i;
-                    moving = true;
-                    destination = destination(i, maze);
+                    newDirection(1, maze);
                 }
             } else if(direction == 1){ // Going South
                 if(cell == 8){
@@ -185,13 +186,7 @@ public class SnowMan
                     moving = true;
                     destination.z = maze.getNorthZ(pos.z);
                 } else {
-                    i = rand.nextInt(4);
-                    while(i == 0 || !getOpen(i, maze)){
-                        i = (i + 1)%4;
-                    }
-                    direction = i;
-                    moving = true;
-                    destination = destination(i, maze);
+                    newDirection(0, maze);
                 }
             } else if(direction == 2){ // East
                 if(cell == 1){
@@ -199,13 +194,7 @@ public class SnowMan
                     moving = true;
                     destination.x = maze.getWestX(pos.x);
                 } else {
-                    i = rand.nextInt(4);
-                    while(i == 3 || !getOpen(i, maze) ){
-                        i = (i + 1)%4;
-                    }
-                    direction = i;
-                    moving = true;
-                    destination = destination(i, maze);
+                    newDirection(3, maze);
                 }
             } else if(direction == 3){ // West
                 if(cell == 2){
@@ -213,17 +202,9 @@ public class SnowMan
                     moving = true;
                     destination.x = maze.getEastX(pos.x);
                 } else {
-                    i = rand.nextInt(4);
-                    while(i == 2 || !getOpen(i, maze)){
-                        i = (i + 1)%4;
-                    }
-                    direction = i;
-                    moving = true;
-                    destination = destination(i, maze);
+                    newDirection(2, maze);
                 }
             }
-            System.out.println("Position X: " + pos.x + ", Z: " + pos.z);
-            System.out.println("Destination X: " + destination.x + ", Z: " + destination.z);
         } else {
             if(direction == 0) { // North
                 if (pos.z < destination.z) {

@@ -165,7 +165,8 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		tokenPositions = new ArrayList<Point3D>();
 		tokens = new ArrayList<Token>();
 		initializeTokens();
-		snowMan = new SnowMan((rand.nextInt(mazeSize) * cellSize) + (cellSize / 2), (rand.nextInt(mazeSize) * cellSize) + (cellSize / 2), ModelMatrix.main, colorLoc);
+		int snowManPos = rand.nextInt(mazeSize-1) + 1;
+		snowMan = new SnowMan((snowManPos * cellSize) + (cellSize / 2), (snowManPos * cellSize) + (cellSize / 2), ModelMatrix.main, colorLoc);
 		snowMan.initDirection(maze);
 	}
 
@@ -280,7 +281,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		}
 		else
 		{
-			movementSpeed = 3f;
+			movementSpeed = 4f;
 		}
 
 		// --- Token updates ---
@@ -314,7 +315,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		cam.pitch(-Gdx.input.getDeltaY() * deltaTime * mouseSpeed);
 
 		// Move snowMan
-		snowMan.move(maze, cam.eye, deltaTime*movementSpeed/3);
+		snowMan.move(maze, cam.eye, deltaTime*movementSpeed/2);
 
 	}
 
@@ -474,7 +475,8 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		else {
 			cam.look(new Point3D((cellSize/2), 2.5f, (cellSize/2)), new Point3D(6,3,lookSouth), new Vector3D(0,1,0));
 		}
-		snowMan = new SnowMan((rand.nextInt(mazeSize) * cellSize) + (cellSize / 2), (rand.nextInt(mazeSize) * cellSize) + (cellSize / 2), ModelMatrix.main, colorLoc);
+		int snowManPos = rand.nextInt(mazeSize-1) + 1;
+		snowMan = new SnowMan((snowManPos * cellSize) + (cellSize / 2), (snowManPos * cellSize) + (cellSize / 2), ModelMatrix.main, colorLoc);
 		snowMan.initDirection(maze);
 	}
 
@@ -491,7 +493,8 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		else {
 			cam.look(new Point3D((cellSize/2), 2.5f, (cellSize/2)), new Point3D(6,3,lookSouth), new Vector3D(0,1,0));
 		}
-		snowMan = new SnowMan((rand.nextInt(mazeSize) * cellSize) + (cellSize / 2), (rand.nextInt(mazeSize) * cellSize) + (cellSize / 2), ModelMatrix.main, colorLoc);
+		int snowManPos = rand.nextInt(mazeSize-1) + 1;
+		snowMan = new SnowMan((snowManPos * cellSize) + (cellSize / 2), (snowManPos * cellSize) + (cellSize / 2), ModelMatrix.main, colorLoc);
 		snowMan.initDirection(maze);
 	}
 
