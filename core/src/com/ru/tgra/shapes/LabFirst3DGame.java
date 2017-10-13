@@ -22,17 +22,22 @@ public class LabFirst3DGame extends ApplicationAdapter {
 	private int viewMatrixLoc;
 	private int projectionMatrixLoc;
 
-	// Player variables
-	private final int GOD_MODE = 0;
-	private final int FIRST_PERSON = 1;
- 	private int playerViewMode;
-	private float playerDirection;
-	private int score;
-
 	// Game variables
 	private int level;
 	private int mazeSize;
 	private float cellSize;
+	private boolean levelingUp;
+	private float levelingUpTime;
+	private float getLevelingUpSpeed = 0.6f;
+
+	// Player variables
+	private final int GOD_MODE = 0;
+	private final int FIRST_PERSON = 1;
+	private int playerViewMode;
+	private float playerDirection;
+	private int score;
+	float lookSouth;
+	float lookEast;
 
 	// Camera variables
 	private Camera cam;
@@ -51,7 +56,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 	private float fov = 50.0f;
 
 	private Maze maze;
-	private float movementSpeed = 3f; // used with deltatime, WASD keys
+	private float movementSpeed = 4f; // used with deltatime, WASD keys
 	private float mouseSpeed = 10f;
 	private float playerSize = 1f; // Radius of player circle, for collision and display in 2D
 	private SnowMan snowMan;
@@ -113,7 +118,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 
 
 		// Birkir and his amazing maze
-		mazeSize = 8;
+		mazeSize = 4;
 		cellSize = 6f;
 		maze = new Maze(mazeSize, mazeSize, cellSize, ModelMatrix.main, colorLoc, positionLoc, normalLoc);
 
@@ -122,10 +127,19 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		// ----------------------------------
 		// 		Camera init & settings
 		// ----------------------------------
+		lookSouth = ((cellSize/2f)*6.0f);
+		lookEast = (cellSize/2f);
+
 		// --- Player camera ---
 		cam = new Camera(viewMatrixLoc, projectionMatrixLoc);
 		cam.perspectiveProjection(fov, (float)Gdx.graphics.getWidth()/(float)Gdx.graphics.getHeight(), 0.4f, 100.0f);
-		cam.look(new Point3D((cellSize/2), 3f, (cellSize/2)), new Point3D(6,3,(cellSize/2)), new Vector3D(0,1,0));
+		if(maze.openEast(cellSize/2, cellSize/2)) {
+			cam.look(new Point3D((cellSize/2), 2.5f, (cellSize/2)), new Point3D(6,3,lookEast), new Vector3D(0,1,0));
+		}
+		else {
+			cam.look(new Point3D((cellSize/2), 2.5f, (cellSize/2)), new Point3D(6,3,lookSouth), new Vector3D(0,1,0));
+		}
+
 		// --- Mini map camera ---
 		orthoCam = new Camera(viewMatrixLoc, projectionMatrixLoc);
 		orthoCam.orthographicProjection(-orthoZoom,orthoZoom,-orthoZoom,orthoZoom,1.0f, 100.0f);
@@ -140,6 +154,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		playerDirection = 0f;
 		score = 0;
 		level = 1;
+		levelingUp = false;
 
 		// ----------------------------------
 		// 		  Token settings
@@ -159,68 +174,85 @@ public class LabFirst3DGame extends ApplicationAdapter {
 
 		angle += 180.0f * deltaTime;
 
-//		Gdx.input.setCursorCatched(true);
+		Gdx.input.setCursorCatched(true);
 
-		if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-			cam.roll(90.f * deltaTime);
-			playerDirection -= 90f * deltaTime;
+		if(levelingUp) {
+			if(levelingUpTime >= 1) {
+				levelingUp = false;
+				levelingUpTime = 0f;
+				levelUp();
+			}
+			levelingUpTime += getLevelingUpSpeed*deltaTime;
 		}
-		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-			cam.roll(-90.f * deltaTime);
-			playerDirection += 90f * deltaTime;
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
-			if(playerViewMode == GOD_MODE) {
-				cam.slide(-movementSpeed * deltaTime, 0, 0);
+		else {
+			if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+				cam.roll(110.f * deltaTime);
+				playerDirection -= 110f * deltaTime;
 			}
-			else {
-				cam.slideMaze(-movementSpeed * deltaTime, 0, 0, maze, playerSize);
-			}
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.D)) {
-			if(playerViewMode == GOD_MODE) {
-				cam.slide(movementSpeed * deltaTime, 0, 0);
-			}
-			else {
-				cam.slideMaze(movementSpeed * deltaTime, 0, 0, maze, playerSize);
-			}
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.W)) {
-			if(playerViewMode == GOD_MODE) {
-				cam.slide(0, 0, -movementSpeed * deltaTime);
-			}
-			else {
-				cam.slideMaze(0, 0, -movementSpeed * deltaTime, maze, playerSize);
-			}
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.S)) {
-			if(playerViewMode == GOD_MODE){
-				cam.slide(0, 0, movementSpeed * deltaTime);
-			}
-			else if(playerViewMode == FIRST_PERSON) {
-				cam.slideMaze(0, 0, movementSpeed * deltaTime, maze, playerSize);
-			}
-		}
-		if(playerViewMode == GOD_MODE)
-		{
-			if(Gdx.input.isKeyPressed(Input.Keys.R)) {
-				cam.slide(0, -movementSpeed * deltaTime, 0);
-			}
-			if(Gdx.input.isKeyPressed(Input.Keys.F)) {
-				cam.slide(0, movementSpeed * deltaTime, 0);
-			}
-			if(Gdx.input.isKeyPressed(Input.Keys.Q)) {
-				cam.roll(-90.f * deltaTime);
-			}
-			if(Gdx.input.isKeyPressed(Input.Keys.E)) {
-				cam.roll(90.f * deltaTime);
+			if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+				cam.roll(-110.f * deltaTime);
+				playerDirection += 110f * deltaTime;
 			}
 			if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
-				cam.pitch(-90.f * deltaTime);
-			}
-			if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
 				cam.pitch(90.f * deltaTime);
 			}
+			if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+				cam.pitch(-90.f * deltaTime);
+			}
+			if(Gdx.input.isKeyPressed(Input.Keys.A)) {
+				if(playerViewMode == GOD_MODE) {
+					cam.slide(-movementSpeed * deltaTime, 0, 0);
+				}
+				else {
+					cam.slideMaze(-movementSpeed * deltaTime, 0, 0, maze, playerSize);
+				}
+			}
+			if(Gdx.input.isKeyPressed(Input.Keys.D)) {
+				if(playerViewMode == GOD_MODE) {
+					cam.slide(movementSpeed * deltaTime, 0, 0);
+				}
+				else {
+					cam.slideMaze(movementSpeed * deltaTime, 0, 0, maze, playerSize);
+				}
+			}
+			if(Gdx.input.isKeyPressed(Input.Keys.W)) {
+				if(playerViewMode == GOD_MODE) {
+					cam.slide(0, 0, -movementSpeed * deltaTime);
+				}
+				else {
+					cam.slideMaze(0, 0, -movementSpeed * deltaTime, maze, playerSize);
+				}
+			}
+			if(Gdx.input.isKeyPressed(Input.Keys.S)) {
+				if(playerViewMode == GOD_MODE){
+					cam.slide(0, 0, movementSpeed * deltaTime);
+				}
+				else if(playerViewMode == FIRST_PERSON) {
+					cam.slideMaze(0, 0, movementSpeed * deltaTime, maze, playerSize);
+				}
+			}
+			if(playerViewMode == GOD_MODE)
+			{
+				if(Gdx.input.isKeyPressed(Input.Keys.R)) {
+					cam.slide(0, -movementSpeed * deltaTime, 0);
+				}
+				if(Gdx.input.isKeyPressed(Input.Keys.F)) {
+					cam.slide(0, movementSpeed * deltaTime, 0);
+				}
+				if(Gdx.input.isKeyPressed(Input.Keys.Q)) {
+					cam.roll(-90.f * deltaTime);
+				}
+				if(Gdx.input.isKeyPressed(Input.Keys.E)) {
+					cam.roll(90.f * deltaTime);
+				}
+				if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
+					cam.pitch(-90.f * deltaTime);
+				}
+				if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+					cam.pitch(90.f * deltaTime);
+				}
+			}
+			snowMan.move(maze, cam.eye, deltaTime*movementSpeed/3);
 		}
 
 		if(Gdx.input.isKeyJustPressed(Input.Keys.V)) {
@@ -260,7 +292,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 
 		// --- Level updates ---
 		if(score == tokenNumber) {
-			levelUp();
+			levelingUp = true;
 		}
 
 		// --- Mouse movement ---
@@ -319,8 +351,12 @@ public class LabFirst3DGame extends ApplicationAdapter {
 			// 		 Draw our MAZE here
 			// ----------------------------------
 
-			maze.display(viewNum == 0);
-
+			if(!levelingUp) {
+				maze.display(viewNum == 0);
+			}
+			else if(levelingUp && viewNum == 1) {
+				maze.display(viewNum == 0);
+			}
 			for(Token token : tokens) {
 				token.display();
 			}
@@ -371,11 +407,11 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		scoreCam.look(new Point3D(0,40,0), new Point3D(0,1,0), new Vector3D(0,0,-1));
 		scoreCam.setShaderMatrices();
 
-		int x = 10;
+		float x = 10f;
 		int z = -10;
 		float scorebarLength = 150f;
 		float scorebarHeight = 5f;
-		float scoreSlotLength = (float)scorebarLength/(float)tokenNumber;
+		float scoreSlotLength = (float)scorebarLength/((float)tokenNumber);
 
 		// Drawing empty scorebar
 		Gdx.gl.glUniform4f(colorLoc, 1f, 1f, 1f, 0.5f);
@@ -387,13 +423,15 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		BoxGraphic.drawSolidCube();
 		ModelMatrix.main.popMatrix();
 
+		//x -= (scorebarLength/2)+(scoreSlotLength/2);
+
 		// Drawing score on the scorebar
 		for(int i = 0; i < score; i++) {
 			Gdx.gl.glUniform4f(colorLoc, 1f, 1f, 0f, 1f);
 			ModelMatrix.main.loadIdentityMatrix();
 			ModelMatrix.main.pushMatrix();
 			ModelMatrix.main.addScale(scoreSlotLength, 0.5f, scorebarHeight);
-			ModelMatrix.main.addTranslationBaseCoords(x-(scorebarLength/2),1f,z);
+			ModelMatrix.main.addTranslationBaseCoords(x - (scorebarLength/2)+(scoreSlotLength/2),1f,z);
 			ModelMatrix.main.setShaderMatrix();
 			BoxGraphic.drawSolidCube();
 			ModelMatrix.main.popMatrix();
@@ -407,17 +445,22 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		//put the code inside the update and display methods, depending on the nature of the code
 		update();
 		display();
-
 	}
 
 
 	private void levelUp() {
 		level++;
-		//mazeSize++;
+		mazeSize++;
+		tokenNumber = (mazeSize*mazeSize) / 2;
 		score = 0;
 		initializeTokens();
-		// Generate maze
-		// Set player to initial position
+		maze = new Maze(mazeSize, mazeSize, cellSize, ModelMatrix.main, colorLoc, positionLoc, normalLoc);
+		if(maze.openEast(cellSize/2, cellSize/2)) {
+			cam.look(new Point3D((cellSize/2), 2.5f, (cellSize/2)), new Point3D(6,3,lookEast), new Vector3D(0,1,0));
+		}
+		else {
+			cam.look(new Point3D((cellSize/2), 2.5f, (cellSize/2)), new Point3D(6,3,lookSouth), new Vector3D(0,1,0));
+		}
 	}
 
 	private void initializeTokens() {
@@ -429,8 +472,8 @@ public class LabFirst3DGame extends ApplicationAdapter {
 			float x;
 			float y;
 			while(true) {
-				x = ((rand.nextInt(mazeSize-1) * cellSize) + (cellSize / 2));
-				y = ((rand.nextInt(mazeSize-1) * cellSize) + (cellSize / 2));
+				x = ((rand.nextInt(mazeSize) * cellSize) + (cellSize / 2));
+				y = ((rand.nextInt(mazeSize) * cellSize) + (cellSize / 2));
 
 				if(!doublePosition(x, y) && !(x == (cellSize / 2) && y == (cellSize / 2))) {
 					tokenPositions.add(new Point3D(x, y, 0));
