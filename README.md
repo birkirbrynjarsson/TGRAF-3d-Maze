@@ -1,10 +1,10 @@
 # 3D Maze - aMazeBalls - Assignment 3-4
 
-### Computer Graphics - Fall 2017
-
-#### by Birkir Brynjarsson and Unnur Sól Ingimarsdóttir
+**Computer Graphics - Fall 2017**.
 
 ## Build and run
+
+`gradle run`
 
 1. Start off by importing the gradle project into your IDE.
 1. Set the `Working directory` in your build/run configurations to the `core/assets/` folder.
@@ -60,5 +60,42 @@ Being able to look around with the mouse without affecting the movement of the p
 ### Other
 
 - 2D camera.
-- Following the player in the 2D camera but also snapping to edges of the maze.
+- Following the player in the 2D camera but also snapping the 2D view to the edges of the maze.
 - Score indicator bar as you collect the tokens/balls.
+- Fix Z-fighting object jitter, avoided by creating the pillars between all the walls. Makes for nice aesthetics too.
+
+## Assignment 4 - Shaders and Lighting
+
+1. Build a lighting model, implement the lighting calculations in the shaders and handle any variables needed to run them correctly.
+1. Lighting model needs to include a material for what is being rendered and more than one light.
+1. Full lighting model would have diffues, specular & ambient for every light + global ambience color.
+  - + Diffuse, specular and ambient for the material being rendered.
+  - + Position and direction for each light. Position for material comes from vertex geometry being sent through the shader.
+
+### Choices
+
+- How many lights
+- Lightning calculations per vertex or per pixel/fragment.
+  - Make sure you understand the difference and what information needs to flow between vertex and fragment shader in each case.
+- Fixed directional, positions of lights (more flexibility can be cool but complex and unnecessary).
+- Shaders are part of assignment 3, only return pdf report for assignment 4.
+
+### The report
+
+**2 Chapters**.
+
+### Description of the lighting model
+
+1. What's in it and why some things are included and other excluded.
+
+### The entire code of our shaders
+
+1. Describing what each line/part does.
+  - Explain every variable and where and how it is used.
+1. Make sure to describe the relationship between vertex and fragment shaders, even if most of the work is in one of them.
+1. Get across the fact that we understand our shaders, within them and how that affects around them in OpenGL.
+
+## Authors
+
+- [Birkir Brynjarsson](https://github.com/birkirbrynjarsson/)
+- [Unnur Sól Ingimarsdóttir](https://github.com/unnursol/)
