@@ -13,7 +13,6 @@ public class Shader {
 
     private int positionLoc;
     private int normalLoc;
-    //private int colorLoc;
 
     // Light
     private int lightPosLoc;
@@ -60,8 +59,6 @@ public class Shader {
         viewMatrixLoc			= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_viewMatrix");
         projectionMatrixLoc	= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_projectionMatrix");
 
-        //colorLoc				= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_color");
-
         lightPosLoc				= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightPosition");
         lightDifLoc				= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightDiffuse");
         matDifLoc				= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_materialDiffuse");
@@ -73,10 +70,6 @@ public class Shader {
         System.out.println(Gdx.gl.glGetShaderInfoLog(vertexShaderID));
         System.out.println(Gdx.gl.glGetShaderInfoLog(fragmentShaderID));
     }
-
-//    public void setColor(float r, float g, float b, float a) {
-//        Gdx.gl.glUniform4f(colorLoc, r, g, b, a);
-//    }
 
     public void setMaterialDiffuse(float r, float g, float b, float a) {
         Gdx.gl.glUniform4f(matDifLoc, r, g, b, a);
