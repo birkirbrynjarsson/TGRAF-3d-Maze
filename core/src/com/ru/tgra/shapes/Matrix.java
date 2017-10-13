@@ -173,5 +173,8 @@ public class Matrix {
 		Gdx.gl.glUniformMatrix4fv(shaderMatrixPointer, 1, false, matrix);
 	}
 
+	public FloatBuffer getmatrix() {
+		return matrix;
+	}
 
 }

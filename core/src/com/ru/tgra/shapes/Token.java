@@ -15,7 +15,7 @@ public class Token {
     // Private variables
     private float y;
     private ModelMatrix mm;
-    private int colorLoc;
+    private Shader shader;
     private float speed;
     private Random rand;
     private Color color;
@@ -25,11 +25,11 @@ public class Token {
     private final float MIN_HEIGHT = 1.5f;
 
 
-    public Token(float x, float y, ModelMatrix mm, int colorLoc){
+    public Token(float x, float y, ModelMatrix mm, Shader shader){
         this.x = x;
         this.z = y;
         this.mm = mm;
-        this.colorLoc = colorLoc;
+        this.shader = shader;
         rand = new Random();
         color = new Color(rand.nextFloat(),rand.nextFloat(),rand.nextFloat(),1);
 
@@ -39,7 +39,7 @@ public class Token {
     }
 
     public void display() {
-        Gdx.gl.glUniform4f(colorLoc, color.r, color.g, color.b, 1f);
+        shader.setColor(color.r, color.g, color.b, 1f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
         mm.addScale(size, size, size);

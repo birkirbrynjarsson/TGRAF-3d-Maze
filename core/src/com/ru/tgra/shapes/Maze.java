@@ -1,6 +1,7 @@
 package com.ru.tgra.shapes;
 
 import com.badlogic.gdx.Gdx;
+import sun.security.provider.SHA;
 
 import java.util.Collections;
 import java.util.Arrays;
@@ -14,29 +15,25 @@ public class Maze
     private float width;
     private final int[][] maze;
     private ModelMatrix mm;
-    private int colorLoc;
     private float height;
-    private int positionLoc;
-    private int normalLoc;
     private long time;
     MazeBrickWall brickWall;
     MazeWoodWall woodWall;
+    private Shader shader;
 
-    public Maze(int x, int y, float cellSize, ModelMatrix mm, int colorLoc, int positionLoc, int normalLoc) {
+    public Maze(int x, int y, float cellSize, ModelMatrix mm, Shader shader) {
         this.x = x;
         this.y = y;
         this.cellSize = cellSize;
         maze = new int[this.x][this.y];
         this.mm = mm;
-        this.colorLoc = colorLoc;
+        this.shader = shader;
         this.width = cellSize/5;
         this.height = 5f;
         generateMaze(0, 0);
-        this.positionLoc = positionLoc;
-        this.normalLoc = normalLoc;
         time = System.nanoTime();
-        brickWall = new MazeBrickWall(cellSize, width, height, mm, colorLoc, positionLoc, normalLoc);
-        woodWall = new MazeWoodWall(cellSize, width, height, mm, colorLoc, positionLoc, normalLoc);
+        brickWall = new MazeBrickWall(cellSize, width, height, mm, shader);
+        woodWall = new MazeWoodWall(cellSize, width, height, mm, shader);
     }
 
     public void display(boolean roofOn) {
@@ -153,7 +150,7 @@ public class Maze
 
     private void displayFloor(){
         float floorThickness = 0.1f;
-        Gdx.gl.glUniform4f(colorLoc, 1f, 1f, 1f, 1f);
+        shader.setColor(1f, 1f, 1f, 1f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
         mm.addScale(x * cellSize, 0.1f, y * cellSize);
@@ -164,7 +161,7 @@ public class Maze
     }
 
     private void displayRoof(){
-        Gdx.gl.glUniform4f(colorLoc, 1f, 1f, 1f, 1f);
+        shader.setColor(1f, 1f, 1f, 1f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
         mm.addScale(x * cellSize, 0.1f, y * cellSize);
@@ -178,7 +175,7 @@ public class Maze
         if(playerView){
             woodWall.displayHorWall(i, j);
         } else {
-            Gdx.gl.glUniform4f(colorLoc, 1f, 1f, 1f, 1.0f);
+            shader.setColor(1f, 1f, 1f, 1.0f);
             mm.loadIdentityMatrix();
             mm.pushMatrix();
             mm.addScale(cellSize, height, width);
@@ -193,7 +190,7 @@ public class Maze
         if(playerView){
             brickWall.displayVerWall(i, j);
         } else {
-            Gdx.gl.glUniform4f(colorLoc, 1f,1f,1f, 1.0f);
+            shader.setColor(1f,1f,1f, 1.0f);
             mm.loadIdentityMatrix();
             mm.pushMatrix();
             mm.addScale(width, height, cellSize);
@@ -205,7 +202,7 @@ public class Maze
     }
 
     private void displayPillar(int i, int j){
-        Gdx.gl.glUniform4f(colorLoc, 0.1f,0.1f,0.1f, 0.1f);
+        shader.setColor(0.1f,0.1f,0.1f, 0.1f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
         mm.addScale(width+width/3, height+1f, width+width/3);
