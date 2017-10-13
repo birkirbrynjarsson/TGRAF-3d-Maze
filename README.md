@@ -33,3 +33,5 @@ The Evil snowman spawns randomly on a diagonal spot in the maze and travels to a
 When the player collides with the snowman he looses the game.
 ### Snowman looking at the player
 We display eyes and nose on the snowman based on the directional vector between the player and the snowman so that the snowman is always looking at the player.
+### Mouse look-around
+Being able to look around with the mouse without affecting the movement of the player inside the maze.
