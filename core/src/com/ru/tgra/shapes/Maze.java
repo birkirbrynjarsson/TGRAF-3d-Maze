@@ -264,22 +264,26 @@ public class Maze
     }
 
     public float getNorthZ(float z){
-        int northCell = (int)(z/cellSize) - 1;
+        float zPoint = z / cellSize;
+        int northCell = (int)zPoint - 1;
         return (float)northCell * cellSize + cellSize/2;
     }
 
     public float getSouthZ(float z){
-        int southCell = (int)(z/cellSize) + 1;
+        float zPoint = z / cellSize;
+        int southCell = (int)zPoint + 1;
         return (float)southCell * cellSize + cellSize/2;
     }
 
     public float getWestX(float x){
-        int westCell = (int)(x/cellSize) - 1;
+        float xPoint = x/cellSize;
+        int westCell = (int)xPoint - 1;
         return (float)westCell * cellSize + cellSize/2;
     }
 
     public float getEastX(float x){
-        int eastCell = (int)(x/cellSize) + 1;
+        float xPoint = x/cellSize;
+        int eastCell = (int)xPoint + 1;
         return (float)eastCell * cellSize + cellSize/2;
     }
 }

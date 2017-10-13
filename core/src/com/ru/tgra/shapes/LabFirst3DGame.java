@@ -148,7 +148,8 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		tokenPositions = new ArrayList<Point3D>();
 		tokens = new ArrayList<Token>();
 		initializeTokens();
-		snowMan = new SnowMan(3f, 3f, ModelMatrix.main, colorLoc);
+		snowMan = new SnowMan(cellSize/2, cellSize/2, ModelMatrix.main, colorLoc);
+		snowMan.initDirection(maze);
 	}
 
 
@@ -158,10 +159,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 
 		angle += 180.0f * deltaTime;
 
-		Gdx.input.setCursorCatched(true);
-
-		// Move snowMan
-		snowMan.move(maze, cam.eye, deltaTime*movementSpeed/3);
+//		Gdx.input.setCursorCatched(true);
 
 		if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
 			cam.roll(90.f * deltaTime);
@@ -270,6 +268,9 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		cam.roll(-Gdx.input.getDeltaX() * deltaTime * mouseSpeed);
 		cam.pitch(-Gdx.input.getDeltaY() * deltaTime * mouseSpeed);
 
+		// Move snowMan
+		snowMan.move(maze, cam.eye, deltaTime*movementSpeed/3);
+
 	}
 
 	private void display()
@@ -324,7 +325,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 				token.display();
 			}
 
-			snowMan.display();
+			snowMan.display(cam.eye);
 
 			// --- Our position in the mini map ---
 			if(viewNum == 1)
