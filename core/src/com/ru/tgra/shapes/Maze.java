@@ -235,35 +235,47 @@ public class Maze
     boolean openNorth(float x, float z){
         float xPoint = x/cellSize;
         float zPoint = z/cellSize;
-        if((maze[(int)zPoint][(int)xPoint] & 8) == 0) return false;
+        if(0 <= (int)xPoint && (int)xPoint < this.x && 0 <= (int)zPoint && (int)zPoint < this.y) {
+            if ((maze[(int) zPoint][(int) xPoint] & 8) == 0) return false;
+        }
         return true;
     }
 
     boolean openSouth(float x, float z){
         float xPoint = x/cellSize;
         float zPoint = z/cellSize;
-        if((maze[(int)zPoint][(int)xPoint] & 4) == 0) return false;
+        if(0 <= (int)xPoint && (int)xPoint < this.x && 0 <= (int)zPoint && (int)zPoint < this.y) {
+            if ((maze[(int) zPoint][(int) xPoint] & 4) == 0) return false;
+        }
         return true;
     }
 
     boolean openEast(float x, float z){
         float xPoint = x/cellSize;
         float zPoint = z/cellSize;
-        if((maze[(int)zPoint][(int)xPoint] & 2) == 0) return false;
+        if(0 <= (int)xPoint && (int)xPoint < this.x && 0 <= (int)zPoint && (int)zPoint < this.y) {
+            if ((maze[(int) zPoint][(int) xPoint] & 2) == 0) return false;
+        }
         return true;
     }
 
     boolean openWest(float x, float z){
         float xPoint = x/cellSize;
         float zPoint = z/cellSize;
-        if((maze[(int)zPoint][(int)xPoint] & 1) == 0) return false;
+        if(0 <= (int)xPoint && (int)xPoint < this.x && 0 <= (int)zPoint && (int)zPoint < this.y) {
+            if((maze[(int)zPoint][(int)xPoint] & 1) == 0) return false;
+        }
         return true;
     }
 
     public int getCellValue(float x, float z){
         float xPoint = x/cellSize;
         float zPoint = z/cellSize;
-        return maze[(int)zPoint][(int)xPoint];
+        if((0 <= (int)xPoint || (int)xPoint < this.x) && (0 <= (int)zPoint || (int)zPoint < this.y)) {
+            return maze[(int) zPoint][(int) xPoint];
+        } else {
+            return 15; // All open
+        }
     }
 
     public float getNorthZ(float z){

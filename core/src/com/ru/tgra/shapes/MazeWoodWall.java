@@ -33,7 +33,7 @@ public class MazeWoodWall
         this.height = height;
         this.positionLoc = positionLoc;
         this.hSplit = 6;
-        fua = cellSize / hSplit / 4;
+        fua = cellSize / hSplit / 3;
         colorArr = new Color[hSplit];
         extrude = new float[hSplit];
         setColor();
