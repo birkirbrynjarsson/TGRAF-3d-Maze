@@ -1,4 +1,3 @@
-
 #ifdef GL_ES
 precision mediump float;
 #endif
@@ -12,8 +11,6 @@ uniform mat4 u_projectionMatrix;
 
 uniform vec4 u_lightPosition;
 uniform vec4 u_eyePosition;
-
-
 
 varying vec4 v_s;
 varying vec4 v_h;
@@ -30,12 +27,12 @@ void main()
     // --- Global coordinates ---
 
     // Lighting
-    vec4 v_n = normal;
+    v_n = normal;
 
-    vec4 v_s = u_lightPosition - position; // Vector pointing to the light
+    v_s = u_lightPosition - position; // Vector pointing to the light
     vec4 v = u_eyePosition - position; // Vector pointing to the camera
 
-    vec4 v_h = v_s + v;
+    v_h = v_s + v;
 
 	position = u_viewMatrix * position;
 	//normal = u_viewMatrix * normal;
