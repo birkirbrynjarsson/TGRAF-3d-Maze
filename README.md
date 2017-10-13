@@ -1,8 +1,6 @@
 # 3D Maze - aMazeBalls - Assignment 3-4
 
-### Computer Graphics - Fall 2017
-
-#### by Birkir Brynjarsson and Unnur Sól Ingimarsdóttir
+**Computer Graphics - Fall 2017**.
 
 ## Build and run
 
@@ -94,3 +92,8 @@ Being able to look around with the mouse without affecting the movement of the p
   - Explain every variable and where and how it is used.
 1. Make sure to describe the relationship between vertex and fragment shaders, even if most of the work is in one of them.
 1. Get across the fact that we understand our shaders, within them and how that affects around them in OpenGL.
+
+## Authors
+
+- [Birkir Brynjarsson](https://github.com/birkirbrynjarsson/)
+- [Unnur Sól Ingimarsdóttir](https://github.com/unnursol/)
