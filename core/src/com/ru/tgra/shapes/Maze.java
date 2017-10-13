@@ -238,7 +238,7 @@ public class Maze
     boolean openNorth(float x, float z){
         float xPoint = x/cellSize;
         float zPoint = z/cellSize;
-        if((0 <= (int)xPoint || (int)xPoint < this.x) && (0 <= (int)zPoint || (int)zPoint < this.y)) {
+        if(0 <= (int)xPoint && (int)xPoint < this.x && 0 <= (int)zPoint && (int)zPoint < this.y) {
             if ((maze[(int) zPoint][(int) xPoint] & 8) == 0) return false;
         }
         return true;
@@ -247,7 +247,7 @@ public class Maze
     boolean openSouth(float x, float z){
         float xPoint = x/cellSize;
         float zPoint = z/cellSize;
-        if((0 <= (int)xPoint || (int)xPoint < this.x) && (0 <= (int)zPoint || (int)zPoint < this.y)) {
+        if(0 <= (int)xPoint && (int)xPoint < this.x && 0 <= (int)zPoint && (int)zPoint < this.y) {
             if ((maze[(int) zPoint][(int) xPoint] & 4) == 0) return false;
         }
         return true;
@@ -256,7 +256,7 @@ public class Maze
     boolean openEast(float x, float z){
         float xPoint = x/cellSize;
         float zPoint = z/cellSize;
-        if((0 <= (int)xPoint || (int)xPoint < this.x) && (0 <= (int)zPoint || (int)zPoint < this.y)) {
+        if(0 <= (int)xPoint && (int)xPoint < this.x && 0 <= (int)zPoint && (int)zPoint < this.y) {
             if ((maze[(int) zPoint][(int) xPoint] & 2) == 0) return false;
         }
         return true;
@@ -265,7 +265,7 @@ public class Maze
     boolean openWest(float x, float z){
         float xPoint = x/cellSize;
         float zPoint = z/cellSize;
-        if((0 <= (int)xPoint || (int)xPoint < this.x) && (0 <= (int)zPoint || (int)zPoint < this.y)) {
+        if(0 <= (int)xPoint && (int)xPoint < this.x && 0 <= (int)zPoint && (int)zPoint < this.y) {
             if((maze[(int)zPoint][(int)xPoint] & 1) == 0) return false;
         }
         return true;
