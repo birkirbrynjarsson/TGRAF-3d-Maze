@@ -27,6 +27,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 	private int mazeSize;
 	private float cellSize;
 	private boolean levelingUp;
+	private boolean gamingOver;
 	private float levelingUpTime;
 	private float getLevelingUpSpeed = 0.6f;
 
@@ -155,6 +156,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		score = 0;
 		level = 1;
 		levelingUp = false;
+		gamingOver = false;
 
 		// ----------------------------------
 		// 		  Token settings
@@ -163,7 +165,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		tokenPositions = new ArrayList<Point3D>();
 		tokens = new ArrayList<Token>();
 		initializeTokens();
-		snowMan = new SnowMan(cellSize/2, cellSize/2, ModelMatrix.main, colorLoc);
+		snowMan = new SnowMan((rand.nextInt(mazeSize) * cellSize) + (cellSize / 2), (rand.nextInt(mazeSize) * cellSize) + (cellSize / 2), ModelMatrix.main, colorLoc);
 		snowMan.initDirection(maze);
 	}
 
@@ -176,11 +178,16 @@ public class LabFirst3DGame extends ApplicationAdapter {
 
 		Gdx.input.setCursorCatched(true);
 
-		if(levelingUp) {
+		if(levelingUp || gamingOver) {
 			if(levelingUpTime >= 1) {
-				levelingUp = false;
 				levelingUpTime = 0f;
-				levelUp();
+				if(levelingUp){
+					levelingUp = false;
+					levelUp();
+				} else {
+					gamingOver = false;
+					gameOver();
+				}
 			}
 			levelingUpTime += getLevelingUpSpeed*deltaTime;
 		}
@@ -295,6 +302,12 @@ public class LabFirst3DGame extends ApplicationAdapter {
 			levelingUp = true;
 		}
 
+		// Snowman collsion
+		if(cam.crashedIntoSnowman(snowMan)){
+			gamingOver = true;
+//			System.out.println("CRASHED INTO SNOWMAN FUCKS!");
+		}
+
 		// --- Mouse movement ---
 
 		cam.roll(-Gdx.input.getDeltaX() * deltaTime * mouseSpeed);
@@ -351,10 +364,10 @@ public class LabFirst3DGame extends ApplicationAdapter {
 			// 		 Draw our MAZE here
 			// ----------------------------------
 
-			if(!levelingUp) {
+			if(!levelingUp || !gamingOver) {
 				maze.display(viewNum == 0);
 			}
-			else if(levelingUp && viewNum == 1) {
+			else if((levelingUp || gamingOver) && viewNum == 1) {
 				maze.display(viewNum == 0);
 			}
 			for(Token token : tokens) {
@@ -451,6 +464,21 @@ public class LabFirst3DGame extends ApplicationAdapter {
 	private void levelUp() {
 		level++;
 		mazeSize++;
+		tokenNumber = (mazeSize*mazeSize) / 2;
+		score = 0;
+		initializeTokens();
+		maze = new Maze(mazeSize, mazeSize, cellSize, ModelMatrix.main, colorLoc, positionLoc, normalLoc);
+		if(maze.openEast(cellSize/2, cellSize/2)) {
+			cam.look(new Point3D((cellSize/2), 2.5f, (cellSize/2)), new Point3D(6,3,lookEast), new Vector3D(0,1,0));
+		}
+		else {
+			cam.look(new Point3D((cellSize/2), 2.5f, (cellSize/2)), new Point3D(6,3,lookSouth), new Vector3D(0,1,0));
+		}
+	}
+
+	private void gameOver(){
+		level = 1;
+		mazeSize = 4;
 		tokenNumber = (mazeSize*mazeSize) / 2;
 		score = 0;
 		initializeTokens();

@@ -232,4 +232,20 @@ public class Camera {
         else
             return false;
     }
+
+    public boolean crashedIntoSnowman(SnowMan snowMan){
+        float distX = eye.x - snowMan.pos.x;
+        float distY = eye.z - snowMan.pos.z;
+        if(distX < 0){
+            distX = -distX;
+        }
+        if(distY < 0){
+            distY = -distY;
+        }
+        if((distX <= (near + snowMan.size)) && (distY <= (near + snowMan.size))) {
+            return true;
+        }
+        else
+            return false;
+    }
 }
