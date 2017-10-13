@@ -1,6 +1,5 @@
 package com.ru.tgra.shapes;
 
-
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -70,7 +69,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 
 		ModelMatrix.main = new ModelMatrix();
 		ModelMatrix.main.loadIdentityMatrix();
-		shader.setModelMatrix(ModelMatrix.main.getmatrix());
+		shader.setModelMatrix(ModelMatrix.main.getMatrix());
 
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 
@@ -123,7 +122,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		tokens = new ArrayList<Token>();
 		initializeTokens();
 		int snowManPos = rand.nextInt(mazeSize-1) + 1;
-		snowMan = new SnowMan((snowManPos * cellSize) + (cellSize / 2), (snowManPos * cellSize) + (cellSize / 2), ModelMatrix.main, colorLoc);
+		snowMan = new SnowMan((snowManPos * cellSize) + (cellSize / 2), (snowManPos * cellSize) + (cellSize / 2), ModelMatrix.main, shader);
 		snowMan.initDirection(maze);
 	}
 
@@ -278,7 +277,6 @@ public class LabFirst3DGame extends ApplicationAdapter {
 
 	private void display()
 	{
-		//do all actual drawing and rendering here
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 		for(int viewNum = 0; viewNum < 2; viewNum++)
@@ -289,6 +287,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 				Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 				cam.perspectiveProjection(fov, (float)Gdx.graphics.getWidth()/(float)Gdx.graphics.getHeight(), 0.1f, 100.0f);
 				shader.setViewMatrix(cam.getViewMatrix());
+				shader.setProjectionMatrix(cam.getProjectionMatrix());
 			}
 			// -- The minimap view --
 			else
@@ -313,8 +312,8 @@ public class LabFirst3DGame extends ApplicationAdapter {
 					}
 				}
 				orthoCam.look(new Point3D(camTrace.x, 10.0f, camTrace.z), camTrace, new Vector3D(0,0,-1));
-//				orthoCam.look(new Point3D(cam.eye.x, 10.0f, cam.eye.z), cam.eye, new Vector3D(0,0,-1));
 				shader.setViewMatrix(orthoCam.getViewMatrix());
+				shader.setProjectionMatrix(orthoCam.getProjectionMatrix());
 
 			}
 
@@ -323,7 +322,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 			// 		 Draw our MAZE here
 			// ----------------------------------
 
-			if(!levelingUp || !gamingOver) {
+			if(!levelingUp && !gamingOver) {
 				maze.display(viewNum == 0);
 			}
 			else if((levelingUp || gamingOver) && viewNum == 1) {
@@ -341,23 +340,19 @@ public class LabFirst3DGame extends ApplicationAdapter {
 				shader.setColor(0.6f,0.0f,0.6f, 1.0f);
 
 				ModelMatrix.main.loadIdentityMatrix();
-				//ModelMatrix.main.addTranslation(250, 250, 0);
 				ModelMatrix.main.pushMatrix();
-//				ModelMatrix.main.addScale(2.0f, 2.0f, 2.0f);
 				ModelMatrix.main.addScale(playerSize, playerSize, playerSize);
 				ModelMatrix.main.addTranslationBaseCoords(cam.eye.x, cam.eye.y,cam.eye.z);
 				ModelMatrix.main.addRotationY(playerDirection);
-				ModelMatrix.main.setShaderMatrix();
+				shader.setModelMatrix(ModelMatrix.main.getMatrix());
 				SphereGraphic.drawSolidSphere();
-//				BoxGraphic.drawSolidCube();
-				//.main.popMatrix();
 
 				// --- Background in the mini map ---
 				shader.setColor(0f, 0f, 0f, 1f);
 				ModelMatrix.main.loadIdentityMatrix();
 				ModelMatrix.main.addScale(1000f, 0.4f, 1000f);
 				ModelMatrix.main.addTranslationBaseCoords(1,0.2f,1);
-				ModelMatrix.main.setShaderMatrix();
+				shader.setModelMatrix(ModelMatrix.main.getMatrix());
 				BoxGraphic.drawSolidCube();
 				ModelMatrix.main.popMatrix();
 			}
@@ -378,6 +373,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 
 		scoreCam.look(new Point3D(0,40,0), new Point3D(0,1,0), new Vector3D(0,0,-1));
 		shader.setViewMatrix(scoreCam.getViewMatrix());
+		shader.setProjectionMatrix(scoreCam.getProjectionMatrix());
 
 		float x = 10f;
 		int z = -10;
@@ -391,11 +387,10 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		ModelMatrix.main.pushMatrix();
 		ModelMatrix.main.addScale(scorebarLength, 0.4f, scorebarHeight);
 		ModelMatrix.main.addTranslationBaseCoords(x,1f,z);
-		ModelMatrix.main.setShaderMatrix();
+		shader.setModelMatrix(ModelMatrix.main.getMatrix());
 		BoxGraphic.drawSolidCube();
 		ModelMatrix.main.popMatrix();
 
-		//x -= (scorebarLength/2)+(scoreSlotLength/2);
 
 		// Drawing score on the scorebar
 		for(int i = 0; i < score; i++) {
@@ -404,7 +399,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 			ModelMatrix.main.pushMatrix();
 			ModelMatrix.main.addScale(scoreSlotLength, 0.5f, scorebarHeight);
 			ModelMatrix.main.addTranslationBaseCoords(x - (scorebarLength/2)+(scoreSlotLength/2),1f,z);
-			ModelMatrix.main.setShaderMatrix();
+			shader.setModelMatrix(ModelMatrix.main.getMatrix());
 			BoxGraphic.drawSolidCube();
 			ModelMatrix.main.popMatrix();
 			x += scoreSlotLength;
@@ -413,7 +408,6 @@ public class LabFirst3DGame extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-
 		//put the code inside the update and display methods, depending on the nature of the code
 		update();
 		display();
@@ -434,7 +428,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 			cam.look(new Point3D((cellSize/2), 2.5f, (cellSize/2)), new Point3D(6,3,lookSouth), new Vector3D(0,1,0));
 		}
 		int snowManPos = rand.nextInt(mazeSize-1) + 1;
-		snowMan = new SnowMan((snowManPos * cellSize) + (cellSize / 2), (snowManPos * cellSize) + (cellSize / 2), ModelMatrix.main, colorLoc);
+		snowMan = new SnowMan((snowManPos * cellSize) + (cellSize / 2), (snowManPos * cellSize) + (cellSize / 2), ModelMatrix.main, shader);
 		snowMan.initDirection(maze);
 	}
 
@@ -452,7 +446,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 			cam.look(new Point3D((cellSize/2), 2.5f, (cellSize/2)), new Point3D(6,3,lookSouth), new Vector3D(0,1,0));
 		}
 		int snowManPos = rand.nextInt(mazeSize-1) + 1;
-		snowMan = new SnowMan((snowManPos * cellSize) + (cellSize / 2), (snowManPos * cellSize) + (cellSize / 2), ModelMatrix.main, colorLoc);
+		snowMan = new SnowMan((snowManPos * cellSize) + (cellSize / 2), (snowManPos * cellSize) + (cellSize / 2), ModelMatrix.main, shader);
 		snowMan.initDirection(maze);
 	}
 

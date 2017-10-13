@@ -1,19 +1,16 @@
 package com.ru.tgra.shapes;
 
-        import com.badlogic.gdx.Gdx;
         import com.badlogic.gdx.graphics.Color;
 
-        import java.awt.*;
         import java.util.Random;
 
 public class MazeWoodWall
 {
     private float cellSize;
     private ModelMatrix mm;
-    private int colorLoc;
     private float width;
     private float height;
-    private int positionLoc;
+    private Shader shader;
     int hSplit;
     float fua;
     private final Color[] colorArr;
@@ -25,14 +22,13 @@ public class MazeWoodWall
             new Color(0x603815FF)
     };
 
-    public MazeWoodWall(float cellSize, float width, float height, ModelMatrix mm, int colorLoc, int positionLoc, int normalLoc) {
+    public MazeWoodWall(float cellSize, float width, float height, ModelMatrix mm, Shader shader) {
         this.cellSize = cellSize;
         this.mm = mm;
-        this.colorLoc = colorLoc;
         this.width = width;
         this.height = height;
-        this.positionLoc = positionLoc;
         this.hSplit = 6;
+        this.shader = shader;
         fua = cellSize / hSplit / 3;
         colorArr = new Color[hSplit];
         extrude = new float[hSplit];
@@ -56,12 +52,12 @@ public class MazeWoodWall
     public void displayHorWall(int i, int j)
     {
         for (int h = 0; h < hSplit; h++) {
-            Gdx.gl.glUniform4f(colorLoc, colorArr[h].r, colorArr[h].g, colorArr[h].b, 1.0f);
+            shader.setColor(colorArr[h].r, colorArr[h].g, colorArr[h].b, 1.0f);
             mm.loadIdentityMatrix();
             mm.pushMatrix();
             mm.addScale(cellSize, height / hSplit - fua, width + extrude[h]);
             mm.addTranslationBaseCoords((float)i*cellSize+(cellSize/2), height / hSplit * h + height/hSplit/2, (float)j*cellSize);
-            mm.setShaderMatrix();
+            shader.setModelMatrix(mm.getMatrix());
             BoxGraphic.drawSolidCube();
             mm.popMatrix();
         }

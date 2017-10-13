@@ -1,11 +1,7 @@
 package com.ru.tgra.shapes;
 
-import com.badlogic.gdx.Gdx;
-import sun.security.provider.SHA;
-
 import java.util.Collections;
 import java.util.Arrays;
-import java.util.Vector;
 
 public class Maze
 {
@@ -155,7 +151,7 @@ public class Maze
         mm.pushMatrix();
         mm.addScale(x * cellSize, 0.1f, y * cellSize);
         mm.addTranslationBaseCoords((x * cellSize)/2,-floorThickness/2,(y * cellSize)/2);
-        mm.setShaderMatrix();
+        shader.setModelMatrix(mm.getMatrix());
         BoxGraphic.drawSolidCube();
         mm.popMatrix();
     }
@@ -166,7 +162,7 @@ public class Maze
         mm.pushMatrix();
         mm.addScale(x * cellSize, 0.1f, y * cellSize);
         mm.addTranslationBaseCoords((x * cellSize)/2, height,(y * cellSize)/2);
-        mm.setShaderMatrix();
+        shader.setModelMatrix(mm.getMatrix());
         BoxGraphic.drawSolidCube();
         mm.popMatrix();
     }
@@ -180,7 +176,7 @@ public class Maze
             mm.pushMatrix();
             mm.addScale(cellSize, height, width);
             mm.addTranslationBaseCoords((float) i * cellSize + (cellSize / 2), height / 2, (float) j * cellSize);
-            mm.setShaderMatrix();
+            shader.setModelMatrix(mm.getMatrix());
             BoxGraphic.drawSolidCube();
             mm.popMatrix();
         }
@@ -195,7 +191,7 @@ public class Maze
             mm.pushMatrix();
             mm.addScale(width, height, cellSize);
             mm.addTranslationBaseCoords((float)i*cellSize, height/2, (float)j*cellSize+(cellSize/2));
-            mm.setShaderMatrix();
+            shader.setModelMatrix(mm.getMatrix());
             BoxGraphic.drawSolidCube();
             mm.popMatrix();
         }
@@ -207,7 +203,7 @@ public class Maze
         mm.pushMatrix();
         mm.addScale(width+width/3, height+1f, width+width/3);
         mm.addTranslationBaseCoords((float)i*cellSize, height/2, (float)j*cellSize);
-        mm.setShaderMatrix();
+        shader.setModelMatrix(mm.getMatrix());
         BoxGraphic.drawSolidCube();
         mm.popMatrix();
     }

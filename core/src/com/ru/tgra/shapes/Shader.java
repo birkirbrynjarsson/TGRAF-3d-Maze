@@ -22,7 +22,7 @@ public class Shader {
     String vertexShaderString;
     String fragmentShaderString;
 
-    void Shader() {
+    public Shader() {
         vertexShaderString = Gdx.files.internal("shaders/simple3D.vert").readString();
         fragmentShaderString =  Gdx.files.internal("shaders/simple3D.frag").readString();
 

@@ -1,19 +1,15 @@
 package com.ru.tgra.shapes;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 
-import java.awt.*;
 import java.util.Random;
 
 public class MazeBrickWall
 {
     private float cellSize;
     private ModelMatrix mm;
-    private int colorLoc;
     private float width;
     private float height;
-    private int positionLoc;
     int hSplit;
     int vSplit;
     float fua;
@@ -25,14 +21,13 @@ public class MazeBrickWall
             new Color(0x330100FF),
             new Color(0xAA3C39FF)
     };
+    Shader shader;
 
-    public MazeBrickWall(float cellSize, float width, float height, ModelMatrix mm, int colorLoc, int positionLoc, int normalLoc) {
+    public MazeBrickWall(float cellSize, float width, float height, ModelMatrix mm, Shader shader) {
         this.cellSize = cellSize;
         this.mm = mm;
-        this.colorLoc = colorLoc;
         this.width = width;
         this.height = height;
-        this.positionLoc = positionLoc;
         this.hSplit = 12;
         this.vSplit = 6;
         fua = cellSize / vSplit / 18;
@@ -40,6 +35,7 @@ public class MazeBrickWall
         extrude = new float[hSplit][vSplit];
         setColor();
         setExtrution();
+        this.shader = shader;
     }
 
     private void setColor(){
@@ -63,7 +59,7 @@ public class MazeBrickWall
     {
         for (int h = 0; h < hSplit; h++) {
             for (int v = 0; v < vSplit; v++) {
-                Gdx.gl.glUniform4f(colorLoc, colorArr[h][v].r, colorArr[h][v].g, colorArr[h][v].b, 1.0f);
+                shader.setColor(colorArr[h][v].r, colorArr[h][v].g, colorArr[h][v].b, 1.0f);
                 mm.loadIdentityMatrix();
                 mm.pushMatrix();
                 if (h % 2 == 0) {
@@ -73,17 +69,17 @@ public class MazeBrickWall
                     mm.addScale(width + extrude[h][v], height / hSplit - fua, cellSize / vSplit - fua);
                     mm.addTranslationBaseCoords((float) i * cellSize, height / hSplit * h + height/hSplit/3, (float) j * cellSize + (cellSize / vSplit * v) + cellSize / vSplit / 2);
                 }
-                mm.setShaderMatrix();
+                shader.setModelMatrix(mm.getMatrix());
                 BoxGraphic.drawSolidCube();
                 mm.popMatrix();
             }
         }
-        Gdx.gl.glUniform4f(colorLoc, 1f, 1f, 1f, 1.0f);
+        shader.setColor(1f, 1f, 1f, 1.0f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
         mm.addScale(width, height, cellSize);
         mm.addTranslationBaseCoords((float) i * cellSize, height / 2, (float) j * cellSize + (cellSize / 2));
-        mm.setShaderMatrix();
+        shader.setModelMatrix(mm.getMatrix());
         BoxGraphic.drawSolidCube();
         mm.popMatrix();
     }

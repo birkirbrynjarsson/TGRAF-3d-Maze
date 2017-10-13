@@ -44,7 +44,7 @@ public class Token {
         mm.pushMatrix();
         mm.addScale(size, size, size);
         mm.addTranslationBaseCoords(x,y,z);
-        mm.setShaderMatrix();
+        shader.setModelMatrix(mm.getMatrix());
         SphereGraphic.drawSolidSphere();
         mm.popMatrix();
     }

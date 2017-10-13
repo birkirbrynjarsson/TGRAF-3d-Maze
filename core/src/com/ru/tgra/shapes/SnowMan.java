@@ -1,8 +1,6 @@
 package com.ru.tgra.shapes;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.utils.BufferUtils;
 
 import java.nio.FloatBuffer;
 import java.util.Random;
@@ -16,7 +14,7 @@ public class SnowMan
     Vector3D n;
 
     private ModelMatrix mm;
-    int colorLoc;
+    Shader shader;
     float size;
     boolean moving;
     Point3D destination;
@@ -28,10 +26,10 @@ public class SnowMan
 
     private FloatBuffer matrixBuffer;
 
-    public SnowMan(float x, float z, ModelMatrix mm, int colorLoc)
+    public SnowMan(float x, float z, ModelMatrix mm, Shader shader)
     {
         this.mm = mm;
-        this.colorLoc = colorLoc;
+        this.shader = shader;
         this.size = 1f;
         moving = false;
         rand = new Random();
@@ -71,63 +69,63 @@ public class SnowMan
         rEyeLook.normalize();
 
         // Bottom ball
-        Gdx.gl.glUniform4f(colorLoc, 1f, 1f, 1f, 1f);
+        shader.setColor(1f, 1f, 1f, 1f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
         mm.addScale(size, size, size);
         mm.addTranslationBaseCoords(pos.x,pos.y,pos.z);
-        mm.setShaderMatrix();
+        shader.setModelMatrix(mm.getMatrix());
         SphereGraphic.drawSolidSphere();
         mm.popMatrix();
 
         // 2nd Ball
-        Gdx.gl.glUniform4f(colorLoc, 1f, 1f, 1f, 1f);
+        shader.setColor(1f, 1f, 1f, 1f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
         mm.addScale(size*0.7f, size*0.7f, size*0.7f);
         mm.addTranslationBaseCoords(pos.x,pos.y + 1.3f,pos.z);
-        mm.setShaderMatrix();
+        shader.setModelMatrix(mm.getMatrix());
         SphereGraphic.drawSolidSphere();
         mm.popMatrix();
 
         // Face ball
-        Gdx.gl.glUniform4f(colorLoc, 1f, 1f, 1f, 1f);
+        shader.setColor(1f, 1f, 1f, 1f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
         mm.addScale(size*0.5f, size*0.5f, size*0.5f);
         mm.addTranslationBaseCoords(pos.x,pos.y + 2.2f,pos.z);
-        mm.setShaderMatrix();
+        shader.setModelMatrix(mm.getMatrix());
         SphereGraphic.drawSolidSphere();
         mm.popMatrix();
 
         // Nose
-        Gdx.gl.glUniform4f(colorLoc, noseColor.r, noseColor.g, noseColor.b, noseColor.a);
+        shader.setColor(noseColor.r, noseColor.g, noseColor.b, noseColor.a);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
         mm.addScale(size*0.2f, size*0.2f, size*0.2f);
         mm.addTranslationBaseCoords(pos.x + (size*0.6f * lookDirection.x),pos.y + 2.1f,pos.z + (size*0.6f * lookDirection.z));
-        mm.setShaderMatrix();
+        shader.setModelMatrix(mm.getMatrix());
         SphereGraphic.drawSolidSphere();
         mm.popMatrix();
 
 
         // Eye Left
-        Gdx.gl.glUniform4f(colorLoc, 0f, 0f, 0f, 0f);
+        shader.setColor(0f, 0f, 0f, 0f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
         mm.addScale(size*0.1f, size*0.1f, size*0.1f);
         mm.addTranslationBaseCoords(pos.x + (size*0.6f * lEyeLook.x),pos.y + 2.3f,pos.z + (size*0.6f * lEyeLook.z));
-        mm.setShaderMatrix();
+        shader.setModelMatrix(mm.getMatrix());
         SphereGraphic.drawSolidSphere();
         mm.popMatrix();
 
         // Eye Right
-        Gdx.gl.glUniform4f(colorLoc, 0f, 0f, 0f, 0f);
+        shader.setColor(0f, 0f, 0f, 0f);
         mm.loadIdentityMatrix();
         mm.pushMatrix();
         mm.addScale(size*0.1f, size*0.1f, size*0.1f);
         mm.addTranslationBaseCoords(pos.x + (size*0.6f * rEyeLook.x),pos.y + 2.3f,pos.z + (size*0.6f * rEyeLook.z));
-        mm.setShaderMatrix();
+        shader.setModelMatrix(mm.getMatrix());
         SphereGraphic.drawSolidSphere();
         mm.popMatrix();
     }
