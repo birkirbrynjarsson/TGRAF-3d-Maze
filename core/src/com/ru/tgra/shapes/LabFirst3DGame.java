@@ -22,13 +22,6 @@ public class LabFirst3DGame extends ApplicationAdapter {
 	private int viewMatrixLoc;
 	private int projectionMatrixLoc;
 
-	// Player variables
-	private final int GOD_MODE = 0;
-	private final int FIRST_PERSON = 1;
- 	private int playerViewMode;
-	private float playerDirection;
-	private int score;
-
 	// Game variables
 	private int level;
 	private int mazeSize;
@@ -36,6 +29,15 @@ public class LabFirst3DGame extends ApplicationAdapter {
 	private boolean levelingUp;
 	private float levelingUpTime;
 	private float getLevelingUpSpeed = 0.6f;
+
+	// Player variables
+	private final int GOD_MODE = 0;
+	private final int FIRST_PERSON = 1;
+	private int playerViewMode;
+	private float playerDirection;
+	private int score;
+	float lookSouth;
+	float lookEast;
 
 	// Camera variables
 	private Camera cam;
@@ -54,7 +56,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 	private float fov = 50.0f;
 
 	private Maze maze;
-	private float movementSpeed = 3f; // used with deltatime, WASD keys
+	private float movementSpeed = 4f; // used with deltatime, WASD keys
 	private float mouseSpeed = 10f;
 	private float playerSize = 1f; // Radius of player circle, for collision and display in 2D
 
@@ -124,10 +126,19 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		// ----------------------------------
 		// 		Camera init & settings
 		// ----------------------------------
+		lookSouth = ((cellSize/2f)*6.0f);
+		lookEast = (cellSize/2f);
+
 		// --- Player camera ---
 		cam = new Camera(viewMatrixLoc, projectionMatrixLoc);
 		cam.perspectiveProjection(fov, (float)Gdx.graphics.getWidth()/(float)Gdx.graphics.getHeight(), 0.4f, 100.0f);
-		cam.look(new Point3D((cellSize/2), 2.5f, (cellSize/2)), new Point3D(6,3,(cellSize/2)), new Vector3D(0,1,0));
+		if(maze.openEast(cellSize/2, cellSize/2)) {
+			cam.look(new Point3D((cellSize/2), 2.5f, (cellSize/2)), new Point3D(6,3,lookEast), new Vector3D(0,1,0));
+		}
+		else {
+			cam.look(new Point3D((cellSize/2), 2.5f, (cellSize/2)), new Point3D(6,3,lookSouth), new Vector3D(0,1,0));
+		}
+
 		// --- Mini map camera ---
 		orthoCam = new Camera(viewMatrixLoc, projectionMatrixLoc);
 		orthoCam.orthographicProjection(-orthoZoom,orthoZoom,-orthoZoom,orthoZoom,1.0f, 100.0f);
@@ -177,6 +188,12 @@ public class LabFirst3DGame extends ApplicationAdapter {
 			if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
 				cam.roll(-110.f * deltaTime);
 				playerDirection += 110f * deltaTime;
+			}
+			if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
+				cam.pitch(90.f * deltaTime);
+			}
+			if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+				cam.pitch(-90.f * deltaTime);
 			}
 			if(Gdx.input.isKeyPressed(Input.Keys.A)) {
 				if(playerViewMode == GOD_MODE) {
@@ -232,7 +249,6 @@ public class LabFirst3DGame extends ApplicationAdapter {
 				}
 			}
 		}
-
 
 		if(Gdx.input.isKeyJustPressed(Input.Keys.V)) {
 			if(playerViewMode == GOD_MODE) {
@@ -419,19 +435,22 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		//put the code inside the update and display methods, depending on the nature of the code
 		update();
 		display();
-
 	}
 
 
 	private void levelUp() {
-		cam.look(new Point3D((cellSize/2), 3f, (cellSize/2)), new Point3D(6,3,(cellSize/2)), new Vector3D(0,1,0));
 		level++;
 		mazeSize++;
+		tokenNumber = (mazeSize*mazeSize) / 2;
 		score = 0;
 		initializeTokens();
 		maze = new Maze(mazeSize, mazeSize, cellSize, ModelMatrix.main, colorLoc, positionLoc, normalLoc);
-		// Generate maze
-		// Set player to initial position
+		if(maze.openEast(cellSize/2, cellSize/2)) {
+			cam.look(new Point3D((cellSize/2), 2.5f, (cellSize/2)), new Point3D(6,3,lookEast), new Vector3D(0,1,0));
+		}
+		else {
+			cam.look(new Point3D((cellSize/2), 2.5f, (cellSize/2)), new Point3D(6,3,lookSouth), new Vector3D(0,1,0));
+		}
 	}
 
 	private void initializeTokens() {
