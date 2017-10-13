@@ -96,7 +96,6 @@ public class Camera {
             if(eyeX + radius < limitEast){
                 eye.x = eyeX;
             } else if(maze.openEast(eyeX, eyeZ)){
-                System.out.println("Open East");
                 if(eye.z + radius < maze.cellLimitSouth(eyeZ) && eye.z - radius > maze.cellLimitNorth(eyeZ)){
                     eye.x = eyeX;
                 }

@@ -256,4 +256,30 @@ public class Maze
         if((maze[(int)zPoint][(int)xPoint] & 1) == 0) return false;
         return true;
     }
+
+    public int getCellValue(float x, float z){
+        float xPoint = x/cellSize;
+        float zPoint = z/cellSize;
+        return maze[(int)zPoint][(int)xPoint];
+    }
+
+    public float getNorthZ(float z){
+        int northCell = (int)(z/cellSize) - 1;
+        return (float)northCell * cellSize + cellSize/2;
+    }
+
+    public float getSouthZ(float z){
+        int southCell = (int)(z/cellSize) + 1;
+        return (float)southCell * cellSize + cellSize/2;
+    }
+
+    public float getWestX(float x){
+        int westCell = (int)(x/cellSize) - 1;
+        return (float)westCell * cellSize + cellSize/2;
+    }
+
+    public float getEastX(float x){
+        int eastCell = (int)(x/cellSize) + 1;
+        return (float)eastCell * cellSize + cellSize/2;
+    }
 }
