@@ -59,6 +59,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 	private float movementSpeed = 4f; // used with deltatime, WASD keys
 	private float mouseSpeed = 10f;
 	private float playerSize = 1f; // Radius of player circle, for collision and display in 2D
+	private SnowMan snowMan;
 
 	@Override
 	public void create () {
@@ -162,6 +163,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		tokenPositions = new ArrayList<Point3D>();
 		tokens = new ArrayList<Token>();
 		initializeTokens();
+		snowMan = new SnowMan(3f, 3f, ModelMatrix.main, colorLoc);
 	}
 
 
@@ -172,6 +174,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 		angle += 180.0f * deltaTime;
 
 		Gdx.input.setCursorCatched(true);
+
 		if(levelingUp) {
 			if(levelingUpTime >= 1) {
 				levelingUp = false;
@@ -248,6 +251,7 @@ public class LabFirst3DGame extends ApplicationAdapter {
 					cam.pitch(90.f * deltaTime);
 				}
 			}
+			snowMan.move(maze, cam.eye, deltaTime*movementSpeed/3);
 		}
 
 		if(Gdx.input.isKeyJustPressed(Input.Keys.V)) {
@@ -352,6 +356,8 @@ public class LabFirst3DGame extends ApplicationAdapter {
 			for(Token token : tokens) {
 				token.display();
 			}
+
+			snowMan.display();
 
 			// --- Our position in the mini map ---
 			if(viewNum == 1)
