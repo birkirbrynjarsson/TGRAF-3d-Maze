@@ -1,6 +1,9 @@
-package com.ru.tgra.shapes;
+package com.ru.tgra.objects.maze;
 
         import com.badlogic.gdx.graphics.Color;
+        import com.ru.tgra.shapes.BoxGraphic;
+        import com.ru.tgra.models.ModelMatrix;
+        import com.ru.tgra.materials.Shader;
 
         import java.util.Random;
 

@@ -1,4 +1,8 @@
-package com.ru.tgra.shapes;
+package com.ru.tgra.objects.maze;
+
+import com.ru.tgra.shapes.BoxGraphic;
+import com.ru.tgra.models.ModelMatrix;
+import com.ru.tgra.materials.Shader;
 
 import java.util.Collections;
 import java.util.Arrays;
@@ -228,7 +232,7 @@ public class Maze
         return (float)(int)xPoint * cellSize + width/2;
     }
 
-    boolean openNorth(float x, float z){
+    public boolean openNorth(float x, float z){
         float xPoint = x/cellSize;
         float zPoint = z/cellSize;
         if(0 <= (int)xPoint && (int)xPoint < this.x && 0 <= (int)zPoint && (int)zPoint < this.y) {
@@ -237,7 +241,7 @@ public class Maze
         return true;
     }
 
-    boolean openSouth(float x, float z){
+    public boolean openSouth(float x, float z){
         float xPoint = x/cellSize;
         float zPoint = z/cellSize;
         if(0 <= (int)xPoint && (int)xPoint < this.x && 0 <= (int)zPoint && (int)zPoint < this.y) {
@@ -246,7 +250,7 @@ public class Maze
         return true;
     }
 
-    boolean openEast(float x, float z){
+    public boolean openEast(float x, float z){
         float xPoint = x/cellSize;
         float zPoint = z/cellSize;
         if(0 <= (int)xPoint && (int)xPoint < this.x && 0 <= (int)zPoint && (int)zPoint < this.y) {
@@ -255,7 +259,7 @@ public class Maze
         return true;
     }
 
-    boolean openWest(float x, float z){
+    public boolean openWest(float x, float z){
         float xPoint = x/cellSize;
         float zPoint = z/cellSize;
         if(0 <= (int)xPoint && (int)xPoint < this.x && 0 <= (int)zPoint && (int)zPoint < this.y) {

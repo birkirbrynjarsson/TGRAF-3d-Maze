@@ -1,4 +1,4 @@
-package com.ru.tgra.shapes;
+package com.ru.tgra.materials;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;

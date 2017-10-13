@@ -1,14 +1,23 @@
-package com.ru.tgra.shapes;
+package com.ru.tgra;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
+import com.ru.tgra.materials.Shader;
+import com.ru.tgra.models.ModelMatrix;
+import com.ru.tgra.models.Point3D;
+import com.ru.tgra.models.Vector3D;
+import com.ru.tgra.objects.Camera;
+import com.ru.tgra.objects.maze.Maze;
+import com.ru.tgra.objects.SnowMan;
+import com.ru.tgra.objects.Token;
+import com.ru.tgra.shapes.*;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-public class LabFirst3DGame extends ApplicationAdapter {
+public class AMazeBallsGame extends ApplicationAdapter {
 
 	// Game variables
 	private int level;

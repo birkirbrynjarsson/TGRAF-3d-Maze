@@ -1,10 +1,12 @@
-package com.ru.tgra.shapes;
-import com.badlogic.gdx.Gdx;
+package com.ru.tgra.objects;
+import com.ru.tgra.models.ModelMatrix;
+import com.ru.tgra.materials.Shader;
+import com.ru.tgra.shapes.SphereGraphic;
 
 public class Torch {
 
     // Private variables
-    private  ModelMatrix mm;
+    private ModelMatrix mm;
     private Shader shader;
     private float size;
     private final int HORIZONTAL = 0;

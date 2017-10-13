@@ -1,7 +1,9 @@
-package com.ru.tgra.shapes;
+package com.ru.tgra.objects;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.BufferUtils;
+import com.ru.tgra.models.Point3D;
+import com.ru.tgra.models.Vector3D;
+import com.ru.tgra.objects.maze.Maze;
 
 import java.nio.FloatBuffer;
 
