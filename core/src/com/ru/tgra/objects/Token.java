@@ -1,7 +1,9 @@
-package com.ru.tgra.shapes;
+package com.ru.tgra.objects;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.ru.tgra.models.ModelMatrix;
+import com.ru.tgra.materials.Shader;
+import com.ru.tgra.shapes.SphereGraphic;
 
 import java.util.Random;
 

@@ -1,6 +1,12 @@
-package com.ru.tgra.shapes;
+package com.ru.tgra.objects;
 
 import com.badlogic.gdx.graphics.Color;
+import com.ru.tgra.models.Point3D;
+import com.ru.tgra.models.Vector3D;
+import com.ru.tgra.models.ModelMatrix;
+import com.ru.tgra.objects.maze.Maze;
+import com.ru.tgra.materials.Shader;
+import com.ru.tgra.shapes.SphereGraphic;
 
 import java.nio.FloatBuffer;
 import java.util.Random;
@@ -15,7 +21,7 @@ public class SnowMan
 
     private ModelMatrix mm;
     Shader shader;
-    float size;
+    public float size;
     boolean moving;
     Point3D destination;
     Random rand;
