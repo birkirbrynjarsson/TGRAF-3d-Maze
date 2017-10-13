@@ -297,8 +297,6 @@ public class AMazeBallsGame extends ApplicationAdapter {
 				shader.setViewMatrix(cam.getViewMatrix());
 				shader.setProjectionMatrix(cam.getProjectionMatrix());
 				shader.setLightPosition(cam.eye.x,cam.eye.y,cam.eye.z,1f);
-				shader.setEyePosition(cam.eye.x,cam.eye.y,cam.eye.z, 1f);
-
 			}
 			// -- The minimap view --
 			else
@@ -325,15 +323,14 @@ public class AMazeBallsGame extends ApplicationAdapter {
 				orthoCam.look(new Point3D(camTrace.x, 10.0f, camTrace.z), camTrace, new Vector3D(0,0,-1));
 				shader.setViewMatrix(orthoCam.getViewMatrix());
 				shader.setProjectionMatrix(orthoCam.getProjectionMatrix());
-				shader.setLightPosition(cam.eye.x,50f,cam.eye.z,100f);
-				shader.setEyePosition(orthoCam.eye.x,orthoCam.eye.y,orthoCam.eye.z, 1f);
+
+				shader.setLightPosition(cam.eye.x,10f,cam.eye.z,1f);
 
 			}
 
 			// ----------------------------------
 			// 		 Lighting stuff
 			// ----------------------------------
-
 			shader.setLightDiffuse(1f,1f,1f,1f);
 
 			// ----------------------------------
@@ -341,14 +338,12 @@ public class AMazeBallsGame extends ApplicationAdapter {
 			// ----------------------------------
 
 			if(!levelingUp && !gamingOver) {
-				shader.setShininess(1000f);
 				maze.display(viewNum == 0);
 			}
 			else if((levelingUp || gamingOver) && viewNum == 1) {
 				maze.display(viewNum == 0);
 			}
 			for(Token token : tokens) {
-				shader.setShininess(10f);
 				token.display();
 			}
 
@@ -397,7 +392,7 @@ public class AMazeBallsGame extends ApplicationAdapter {
 		shader.setViewMatrix(scoreCam.getViewMatrix());
 		shader.setProjectionMatrix(scoreCam.getProjectionMatrix());
 
-		shader.setLightPosition(0,40f,10,1f);
+		shader.setLightPosition(10,40f,10,1f);
 
 		float x = 10f;
 		int z = -10;

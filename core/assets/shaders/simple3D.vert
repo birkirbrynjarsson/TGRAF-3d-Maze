@@ -13,7 +13,6 @@ uniform vec4 u_lightPosition;
 uniform vec4 u_eyePosition;
 
 varying vec4 v_s;
-varying vec4 v_h;
 varying vec4 v_n;
 
 void main()
@@ -30,9 +29,6 @@ void main()
     v_n = normal;
 
     v_s = u_lightPosition - position; // Vector pointing to the light
-    vec4 v = u_eyePosition - position; // Vector pointing to the camera
-
-    v_h = v_s + v;
 
 	position = u_viewMatrix * position;
 	//normal = u_viewMatrix * normal;
