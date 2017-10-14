@@ -124,9 +124,9 @@ void main()
 Some specular calculations that we ended up not using.
 
 ```c++
-    // For use with specular color calculations, we calculated v_h which is the vector from surface vertex to eye.
+    // For use with specular color calculations, we calculated v which is the vector from surface vertex to eye.
     vec4 v = u_eyePosition - position; // Vector pointing to the camera
-    // v_h is the vector addition of the vectors 'source to light' and 'source to eye'
+    // v_h is the vector addition of the vectors 'source to light' and 'source to eye' to use for specular highlight.
     v_h = v_s + v;
 ```
 
@@ -147,9 +147,10 @@ void main()
 Specular calculations in the fragment shader.
 
 ```c++
-    // Like lambert, phong is the intensity value based on v_h and the viewers eye. It is most intense in the vertex that would reflect the light source in the surface.
+    // Like lambert, phong is the intensity value based on v_h and the viewers eye.
+    // It is most intense in the vertex that would reflect the light source in the surface.
     float phong = dot(v_n, v_h) / (length(v_n) * length(v_h));
-    vec4 color = lambert * u_lightDiffuse * u_materialDiffuse
+    vec4 color = lambert * u_lightDiffuse * u_materialDiffuse;
     // As material shininess is increased the specular highlight becomes smaller as the strength diminishes faster. Phong is 1 where it's the strongest but fades to zero and as < 1 values are put to any power they become smaller.
     color += pow(phong, u_materialShininess) * u_lightDiffuse * vec4(1.0f,1.0f,1.0f,1.0f);
 ```
