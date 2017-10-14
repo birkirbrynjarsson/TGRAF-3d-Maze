@@ -66,24 +66,6 @@ Being able to look around with the mouse without affecting the movement of the p
 
 ## Assignment 4 - Shaders and Lighting
 
-1. Build a lighting model, implement the lighting calculations in the shaders and handle any variables needed to run them correctly.
-1. Lighting model needs to include a material for what is being rendered and more than one light.
-1. Full lighting model would have diffues, specular & ambient for every light + global ambience color.
-  - + Diffuse, specular and ambient for the material being rendered.
-  - + Position and direction for each light. Position for material comes from vertex geometry being sent through the shader.
-
-### Choices
-
-- How many lights
-- Lightning calculations per vertex or per pixel/fragment.
-  - Make sure you understand the difference and what information needs to flow between vertex and fragment shader in each case.
-- Fixed directional, positions of lights (more flexibility can be cool but complex and unnecessary).
-- Shaders are part of assignment 3, only return pdf report for assignment 4.
-
-### The report
-
-**2 Chapters**.
-
 ### Description of the lighting model
 
 We've spent a good amount of time tweaking our shader class and the vertex shader for some specular higlighting. We never got a satisfying look so we've just fallen back to our original basic diffuse light. We'd love to spend some more time on this, but our brains are fried and learning from 4 hour youtube videos is a terrible medium for tired minds.
@@ -92,15 +74,11 @@ So our model has only 1 light source, a light that hovers over the player and il
 
 ### The entire code of our shaders
 
-1. Describing what each line/part does.
-- Explain every variable and where and how it is used.
-1. Make sure to describe the relationship between vertex and fragment shaders, even if most of the work is in one of them.
-1. Get across the fact that we understand our shaders, within them and how that affects around them in OpenGL.
+We've removed the variable declerations in the shaders for less text, this is the difference between the 3 types of variables that we declear.
 
-`attribute` vertex list sent each time into main as the shaders gets executed.
-`uniform` variables are only used within the shader. These are the common variables that we've used and have handles to in our Java program.
-`varying` variables brought along the entire OpenGl pipeline, can send along as many as we want. v_color used in rasterization and fragment shader.
-
+- `attribute` variables is the vertex list sent each time into main as the shaders gets executed.
+- `uniform` variables are only used within the shader. These are the common variables that we've used and have handles to in our Java program.
+- `varying` variables brought along the entire OpenGl pipeline, can send along as many as we want. v_color used in rasterization and therefor found again in the fragment shader.
 
 ### Vertex shader - Simple3D.vert
 ```c++
