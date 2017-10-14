@@ -99,7 +99,7 @@ So our model has only 1 light source, a light that hovers over the player and il
 
 `attribute` vertex list sent each time into main as the shaders gets executed.
 `uniform` variables are only used within the shader. These are the common variables that we've used and have handles to in our Java program.
-`varying` variables brought along the entire OpenGl pipeline.
+`varying` variables brought along the entire OpenGl pipeline, can send along as many as we want. v_color used in rasterization and fragment shader.
 
 
 ### Vertex shader - Simple3D.vert
@@ -112,7 +112,7 @@ void main()
     vec4 normal = vec4(a_normal.x, a_normal.y, a_normal.z, 0.0);
     normal = u_modelMatrix * normal; // The normal vector of the object
 
-    v_n = normal; 
+    v_n = normal;
     v_s = u_lightPosition - position; // Vector pointing to the light
 
     position = u_viewMatrix * position; // The final position in the game
@@ -121,16 +121,37 @@ void main()
 }
 ```
 
+Some specular calculations that we ended up not using.
+
+```c++
+    // For use with specular color calculations, we calculated v_h which is the vector from surface vertex to eye.
+    vec4 v = u_eyePosition - position; // Vector pointing to the camera
+    // v_h is the vector addition of the vectors 'source to light' and 'source to eye'
+    v_h = v_s + v;
+```
+
 ### Fragment shader - Simple3D.frag
 ```c++
 void main()
 {
+    // Lambert calculates the strength of the color based on the corner between the vertex's normal and vector from the vertex to the light source. This is a value between 0.0 and 1.0
     float lambert = dot(v_n, v_s) / (length(v_n) * length(v_s)); // How light hits the objects
 
+    // Value as a strength unit multiplied to the color. Diffuse is a value independent from the position of the looking eye.
     vec4 color = (lambert * u_lightDiffuse * u_materialDiffuse); // The final color of the object
 
     gl_FragColor = color; // Setting the color
 }
+```
+
+Specular calculations in the fragment shader.
+
+```c++
+    // Like lambert, phong is the intensity value based on v_h and the viewers eye. It is most intense in the vertex that would reflect the light source in the surface.
+    float phong = dot(v_n, v_h) / (length(v_n) * length(v_h));
+    vec4 color = lambert * u_lightDiffuse * u_materialDiffuse
+    // As material shininess is increased the specular highlight becomes smaller as the strength diminishes faster. Phong is 1 where it's the strongest but fades to zero and as < 1 values are put to any power they become smaller.
+    color += pow(phong, u_materialShininess) * u_lightDiffuse * vec4(1.0f,1.0f,1.0f,1.0f);
 ```
 
 ## Authors
