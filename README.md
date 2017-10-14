@@ -86,30 +86,19 @@ Being able to look around with the mouse without affecting the movement of the p
 
 ### Description of the lighting model
 
-1. What's in it and why some things are included and other excluded.
+We've spent a good amount of time tweaking our shader class and the vertex shader for some specular higlighting. We never got a satisfying look so we've just fallen back to our original basic diffuse light. We'd love to spend some more time on this, but our brains are fried and learning from 4 hour youtube videos is a terrible medium for tired minds.
+
+So our model has only 1 light source, a light that hovers over the player and illuminates the scene. It does look good though :)
 
 ### The entire code of our shaders
 
 1. Describing what each line/part does.
-  - Explain every variable and where and how it is used.
+- Explain every variable and where and how it is used.
 1. Make sure to describe the relationship between vertex and fragment shaders, even if most of the work is in one of them.
 1. Get across the fact that we understand our shaders, within them and how that affects around them in OpenGL.
 
+### Vertex shader - Simple3D.vert
 ```c++
-attribute vec3 a_position;
-attribute vec3 a_normal;
-
-uniform mat4 u_modelMatrix;
-uniform mat4 u_viewMatrix;
-uniform mat4 u_projectionMatrix;
-
-uniform vec4 u_lightPosition;
-uniform vec4 u_lightDiffuse;
-uniform vec4 u_materialDiffuse;
-
-//uniform vec4 u_color;
-varying vec4 v_color;
-
 void main()
 {
     vec4 position = vec4(a_position.x, a_position.y, a_position.z, 1.0);
@@ -118,23 +107,24 @@ void main()
     vec4 normal = vec4(a_normal.x, a_normal.y, a_normal.z, 0.0);
     normal = u_modelMatrix * normal;
 
-    // --- Global coordinates ---
-
-    // Lighting
-
-    vec4 s = u_lightPosition - position; // Vector pointing to the light
-    float lambert = dot(normal, s) / (length(normal) * length(s)); // How light hits the objects
-    v_color = lambert * u_lightDiffuse * u_materialDiffuse;
+    v_n = normal;
+    v_s = u_lightPosition - position; // Vector pointing to the light
 
     position = u_viewMatrix * position;
-    //normal = u_viewMatrix * normal;
-
-    // --- Eye coordinates ---
-
-    //v_color = (max(0, (dot(normal, normalize(vec4(-position.x, -position.y, -position.z,0)) / length(normal)))) * u_color);
-    //v_color = (dot(normal, vec4(0,0,1,0)) / length(normal)) * u_color;
 
     gl_Position = u_projectionMatrix * position;
+}
+```
+
+### Fragment shader - Simple3D.frag
+```c++
+void main()
+{
+    float lambert = dot(v_n, v_s) / (length(v_n) * length(v_s)); // How light hits the objects
+
+    vec4 color = (lambert * u_lightDiffuse * u_materialDiffuse);
+
+    gl_FragColor = color;
 }
 ```
 
