@@ -107,17 +107,17 @@ So our model has only 1 light source, a light that hovers over the player and il
 void main()
 {
     vec4 position = vec4(a_position.x, a_position.y, a_position.z, 1.0);
-    position = u_modelMatrix * position;
+    position = u_modelMatrix * position; // The position of the object
 
     vec4 normal = vec4(a_normal.x, a_normal.y, a_normal.z, 0.0);
-    normal = u_modelMatrix * normal;
+    normal = u_modelMatrix * normal; // The normal vector of the object
 
-    v_n = normal;
+    v_n = normal; 
     v_s = u_lightPosition - position; // Vector pointing to the light
 
-    position = u_viewMatrix * position;
+    position = u_viewMatrix * position; // The final position in the game
 
-    gl_Position = u_projectionMatrix * position;
+    gl_Position = u_projectionMatrix * position; // Setting the position
 }
 ```
 
@@ -127,9 +127,9 @@ void main()
 {
     float lambert = dot(v_n, v_s) / (length(v_n) * length(v_s)); // How light hits the objects
 
-    vec4 color = (lambert * u_lightDiffuse * u_materialDiffuse);
+    vec4 color = (lambert * u_lightDiffuse * u_materialDiffuse); // The final color of the object
 
-    gl_FragColor = color;
+    gl_FragColor = color; // Setting the color
 }
 ```
 
