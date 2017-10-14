@@ -88,7 +88,7 @@ Being able to look around with the mouse without affecting the movement of the p
 
 We've spent a good amount of time tweaking our shader class and the vertex shader for some specular higlighting. We never got a satisfying look so we've just fallen back to our original basic diffuse light. We'd love to spend some more time on this, but our brains are fried and learning from 4 hour youtube videos is a terrible medium for tired minds.
 
-So our model has only 1 light source, a light that hovers over the player and illuminates the scene. It does look good though :)
+So our model has only 1 light source, a light that hovers over the player and illuminates the scene. It does look pretty good though :)
 
 ### The entire code of our shaders
 
@@ -96,6 +96,11 @@ So our model has only 1 light source, a light that hovers over the player and il
 - Explain every variable and where and how it is used.
 1. Make sure to describe the relationship between vertex and fragment shaders, even if most of the work is in one of them.
 1. Get across the fact that we understand our shaders, within them and how that affects around them in OpenGL.
+
+`attribute` vertex list sent each time into main as the shaders gets executed.
+`uniform` variables are only used within the shader. These are the common variables that we've used and have handles to in our Java program.
+`varying` variables brought along the entire OpenGl pipeline.
+
 
 ### Vertex shader - Simple3D.vert
 ```c++
